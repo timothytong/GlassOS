@@ -1,0 +1,420 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		334FA4581A3B56480065A87D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 334FA4571A3B56480065A87D /* AppDelegate.swift */; };
+		334FA45F1A3B56480065A87D /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 334FA45E1A3B56480065A87D /* Images.xcassets */; };
+		334FA4621A3B56480065A87D /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 334FA4601A3B56480065A87D /* LaunchScreen.xib */; };
+		334FA46E1A3B56480065A87D /* GlassOSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 334FA46D1A3B56480065A87D /* GlassOSTests.swift */; };
+		334FA47A1A3B567F0065A87D /* RootController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 334FA4771A3B567F0065A87D /* RootController.swift */; };
+		334FA47B1A3B567F0065A87D /* CamHomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 334FA4781A3B567F0065A87D /* CamHomeController.swift */; };
+		334FA47C1A3B567F0065A87D /* MainController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 334FA4791A3B567F0065A87D /* MainController.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		334FA4681A3B56480065A87D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 334FA44A1A3B56480065A87D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 334FA4511A3B56480065A87D;
+			remoteInfo = GlassOS;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		334FA4521A3B56480065A87D /* GlassOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GlassOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		334FA4561A3B56480065A87D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		334FA4571A3B56480065A87D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		334FA45E1A3B56480065A87D /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		334FA4611A3B56480065A87D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
+		334FA4671A3B56480065A87D /* GlassOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GlassOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		334FA46C1A3B56480065A87D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		334FA46D1A3B56480065A87D /* GlassOSTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassOSTests.swift; sourceTree = "<group>"; };
+		334FA4771A3B567F0065A87D /* RootController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootController.swift; sourceTree = "<group>"; };
+		334FA4781A3B567F0065A87D /* CamHomeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CamHomeController.swift; sourceTree = "<group>"; };
+		334FA4791A3B567F0065A87D /* MainController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainController.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		334FA44F1A3B56480065A87D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		334FA4641A3B56480065A87D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		334FA4491A3B56480065A87D = {
+			isa = PBXGroup;
+			children = (
+				334FA4541A3B56480065A87D /* GlassOS */,
+				334FA46A1A3B56480065A87D /* GlassOSTests */,
+				334FA4531A3B56480065A87D /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		334FA4531A3B56480065A87D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				334FA4521A3B56480065A87D /* GlassOS.app */,
+				334FA4671A3B56480065A87D /* GlassOSTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		334FA4541A3B56480065A87D /* GlassOS */ = {
+			isa = PBXGroup;
+			children = (
+				334FA4771A3B567F0065A87D /* RootController.swift */,
+				334FA4781A3B567F0065A87D /* CamHomeController.swift */,
+				334FA4791A3B567F0065A87D /* MainController.swift */,
+				334FA4571A3B56480065A87D /* AppDelegate.swift */,
+				334FA45E1A3B56480065A87D /* Images.xcassets */,
+				334FA4601A3B56480065A87D /* LaunchScreen.xib */,
+				334FA4551A3B56480065A87D /* Supporting Files */,
+			);
+			path = GlassOS;
+			sourceTree = "<group>";
+		};
+		334FA4551A3B56480065A87D /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				334FA4561A3B56480065A87D /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		334FA46A1A3B56480065A87D /* GlassOSTests */ = {
+			isa = PBXGroup;
+			children = (
+				334FA46D1A3B56480065A87D /* GlassOSTests.swift */,
+				334FA46B1A3B56480065A87D /* Supporting Files */,
+			);
+			path = GlassOSTests;
+			sourceTree = "<group>";
+		};
+		334FA46B1A3B56480065A87D /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				334FA46C1A3B56480065A87D /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		334FA4511A3B56480065A87D /* GlassOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 334FA4711A3B56480065A87D /* Build configuration list for PBXNativeTarget "GlassOS" */;
+			buildPhases = (
+				334FA44E1A3B56480065A87D /* Sources */,
+				334FA44F1A3B56480065A87D /* Frameworks */,
+				334FA4501A3B56480065A87D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = GlassOS;
+			productName = GlassOS;
+			productReference = 334FA4521A3B56480065A87D /* GlassOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+		334FA4661A3B56480065A87D /* GlassOSTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 334FA4741A3B56480065A87D /* Build configuration list for PBXNativeTarget "GlassOSTests" */;
+			buildPhases = (
+				334FA4631A3B56480065A87D /* Sources */,
+				334FA4641A3B56480065A87D /* Frameworks */,
+				334FA4651A3B56480065A87D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				334FA4691A3B56480065A87D /* PBXTargetDependency */,
+			);
+			name = GlassOSTests;
+			productName = GlassOSTests;
+			productReference = 334FA4671A3B56480065A87D /* GlassOSTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		334FA44A1A3B56480065A87D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0610;
+				ORGANIZATIONNAME = "Timothy Tong";
+				TargetAttributes = {
+					334FA4511A3B56480065A87D = {
+						CreatedOnToolsVersion = 6.1.1;
+					};
+					334FA4661A3B56480065A87D = {
+						CreatedOnToolsVersion = 6.1.1;
+						TestTargetID = 334FA4511A3B56480065A87D;
+					};
+				};
+			};
+			buildConfigurationList = 334FA44D1A3B56480065A87D /* Build configuration list for PBXProject "GlassOS" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 334FA4491A3B56480065A87D;
+			productRefGroup = 334FA4531A3B56480065A87D /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				334FA4511A3B56480065A87D /* GlassOS */,
+				334FA4661A3B56480065A87D /* GlassOSTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		334FA4501A3B56480065A87D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				334FA4621A3B56480065A87D /* LaunchScreen.xib in Resources */,
+				334FA45F1A3B56480065A87D /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		334FA4651A3B56480065A87D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		334FA44E1A3B56480065A87D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				334FA47C1A3B567F0065A87D /* MainController.swift in Sources */,
+				334FA47B1A3B567F0065A87D /* CamHomeController.swift in Sources */,
+				334FA4581A3B56480065A87D /* AppDelegate.swift in Sources */,
+				334FA47A1A3B567F0065A87D /* RootController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		334FA4631A3B56480065A87D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				334FA46E1A3B56480065A87D /* GlassOSTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		334FA4691A3B56480065A87D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 334FA4511A3B56480065A87D /* GlassOS */;
+			targetProxy = 334FA4681A3B56480065A87D /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		334FA4601A3B56480065A87D /* LaunchScreen.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				334FA4611A3B56480065A87D /* Base */,
+			);
+			name = LaunchScreen.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		334FA46F1A3B56480065A87D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		334FA4701A3B56480065A87D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		334FA4721A3B56480065A87D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = GlassOS/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		334FA4731A3B56480065A87D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = GlassOS/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		334FA4751A3B56480065A87D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = GlassOSTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GlassOS.app/GlassOS";
+			};
+			name = Debug;
+		};
+		334FA4761A3B56480065A87D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = GlassOSTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GlassOS.app/GlassOS";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		334FA44D1A3B56480065A87D /* Build configuration list for PBXProject "GlassOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				334FA46F1A3B56480065A87D /* Debug */,
+				334FA4701A3B56480065A87D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		334FA4711A3B56480065A87D /* Build configuration list for PBXNativeTarget "GlassOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				334FA4721A3B56480065A87D /* Debug */,
+				334FA4731A3B56480065A87D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		334FA4741A3B56480065A87D /* Build configuration list for PBXNativeTarget "GlassOSTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				334FA4751A3B56480065A87D /* Debug */,
+				334FA4761A3B56480065A87D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 334FA44A1A3B56480065A87D /* Project object */;
+}
