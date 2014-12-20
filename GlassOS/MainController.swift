@@ -12,8 +12,8 @@ class MainController: UIViewController {
     var startBtn: UIButton!
     override func viewDidLoad() {
         super.viewDidLoad()
-        var welcomelabel = UILabel(frame: CGRectMake(0, 0, self.view.frame.width, 60))
-        welcomelabel.text = "Welcome to VROS."
+        var welcomelabel = UILabel(frame: CGRectMake(0, 10, self.view.frame.width, 60))
+        welcomelabel.text = "Welcome to GlassOS."
         welcomelabel.textAlignment = NSTextAlignment.Center
         welcomelabel.font = UIFont(name: "HelveticaNeue-Thin", size: 35)
         self.view.addSubview(welcomelabel)

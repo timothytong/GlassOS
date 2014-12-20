@@ -13,18 +13,18 @@ class CamHomeController: UIViewController {
     
     var captureSession:AVCaptureSession!
     var captureDevice:AVCaptureDevice?
-    
+    var notificationBox: NotificationBox!
     override func viewDidLoad() {
         println("CamView did load")
         super.viewDidLoad()
-        self.view.backgroundColor = UIColor.whiteColor()
-        self.captureSession = AVCaptureSession()
-        self.captureSession.sessionPreset = AVCaptureSessionPresetHigh
+        view.backgroundColor = UIColor.whiteColor()
+        captureSession = AVCaptureSession()
+        captureSession.sessionPreset = AVCaptureSessionPresetHigh
         let devices = AVCaptureDevice.devices()
         for device in devices {
             if (device.hasMediaType(AVMediaTypeVideo)) {
                 if(device.position == AVCaptureDevicePosition.Back) {
-                    self.captureDevice = device as? AVCaptureDevice
+                    captureDevice = device as? AVCaptureDevice
                     beginSession()
                 }
             }
@@ -33,16 +33,18 @@ class CamHomeController: UIViewController {
     func beginSession(){
         println("Beginning session")
         var error : NSError? = nil
-        self.captureSession.addInput(AVCaptureDeviceInput(device: self.captureDevice!, error: &error))
+        captureSession.addInput(AVCaptureDeviceInput(device: captureDevice!, error: &error))
         if error != nil{
             println("error: \(error?.localizedDescription)")
         }
-        var previewLayer = AVCaptureVideoPreviewLayer(session: self.captureSession)
+        var previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
         var connection = previewLayer.connection
         connection.videoOrientation = AVCaptureVideoOrientation.LandscapeRight
-        previewLayer?.frame = self.view.layer.frame
-        self.view.layer.addSublayer(previewLayer)
-        self.captureSession.startRunning()
+        previewLayer?.frame = view.layer.frame
+        view.layer.addSublayer(previewLayer)
+        captureSession.startRunning()
+        notificationBox = NotificationBox(frame: CGRectMake(view.frame.width - 110, 10, 100, 60))
+        
     }
     
     
