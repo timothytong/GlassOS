@@ -1,6 +1,6 @@
 //
 //  MainController.swift
-//  VROS
+//  GlassOS
 //
 //  Created by Timothy Tong on 2014-12-11.
 //  Copyright (c) 2014 Timothy Tong. All rights reserved.

@@ -1,6 +1,6 @@
 //
 //  CamHomeController.swift
-//  VROS
+//  GlassOS
 //
 //  Created by Timothy Tong on 2014-12-11.
 //  Copyright (c) 2014 Timothy Tong. All rights reserved.
@@ -10,10 +10,10 @@ import UIKit
 import AVFoundation
 
 class CamHomeController: UIViewController {
-    
     var captureSession:AVCaptureSession!
     var captureDevice:AVCaptureDevice?
     var notificationBox: NotificationBox!
+    var mainMenu: Menu!
     override func viewDidLoad() {
         println("CamView did load")
         super.viewDidLoad()
@@ -45,6 +45,9 @@ class CamHomeController: UIViewController {
         captureSession.startRunning()
         notificationBox = NotificationBox(frame: CGRectMake(view.frame.width - 110, 10, 100, 60))
         
+        mainMenu = Menu(dimension: self.view.frame, numOfItems: 4, arrayDicts: nil)
+        view.addSubview(mainMenu)
+
     }
     
     
