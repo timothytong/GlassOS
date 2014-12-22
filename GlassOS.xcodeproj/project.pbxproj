@@ -16,6 +16,14 @@
 		334FA47C1A3B567F0065A87D /* MainController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 334FA4791A3B567F0065A87D /* MainController.swift */; };
 		338EB0991A45261E008CF15C /* OCRWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 338EB0981A45261E008CF15C /* OCRWindow.swift */; };
 		338EB09C1A45364C008CF15C /* help.png in Resources */ = {isa = PBXBuildFile; fileRef = 338EB09B1A45364C008CF15C /* help.png */; };
+		3398CB821A47DAF1002E8B89 /* help_sel.png in Resources */ = {isa = PBXBuildFile; fileRef = 3398CB811A47DAF1002E8B89 /* help_sel.png */; };
+		3398CB841A47E1FF002E8B89 /* MenuBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3398CB831A47E1FF002E8B89 /* MenuBlock.swift */; };
+		3398CB871A47ECF5002E8B89 /* email_sel.png in Resources */ = {isa = PBXBuildFile; fileRef = 3398CB851A47ECF5002E8B89 /* email_sel.png */; };
+		3398CB881A47ECF5002E8B89 /* email.png in Resources */ = {isa = PBXBuildFile; fileRef = 3398CB861A47ECF5002E8B89 /* email.png */; };
+		3398CB8B1A47ED20002E8B89 /* cam_sel.png in Resources */ = {isa = PBXBuildFile; fileRef = 3398CB891A47ED20002E8B89 /* cam_sel.png */; };
+		3398CB8C1A47ED20002E8B89 /* cam.png in Resources */ = {isa = PBXBuildFile; fileRef = 3398CB8A1A47ED20002E8B89 /* cam.png */; };
+		3398CB8F1A47ED39002E8B89 /* settings_sel.png in Resources */ = {isa = PBXBuildFile; fileRef = 3398CB8D1A47ED39002E8B89 /* settings_sel.png */; };
+		3398CB901A47ED39002E8B89 /* settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 3398CB8E1A47ED39002E8B89 /* settings.png */; };
 		33DAB8431A452360007F6A02 /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DAB8421A452360007F6A02 /* Menu.swift */; };
 		33FCAEF91A3B5B9A007FBFF2 /* NotificationBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FCAEF81A3B5B9A007FBFF2 /* NotificationBox.swift */; };
 		C678D4C7F18DCB80EB93598B /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 746017FE711EFBFBB66A6252 /* libPods.a */; };
@@ -46,6 +54,14 @@
 		335901091E294B5DB7A79A3E /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		338EB0981A45261E008CF15C /* OCRWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OCRWindow.swift; sourceTree = "<group>"; };
 		338EB09B1A45364C008CF15C /* help.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = help.png; path = Images/help.png; sourceTree = "<group>"; };
+		3398CB811A47DAF1002E8B89 /* help_sel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = help_sel.png; path = Images/help_sel.png; sourceTree = "<group>"; };
+		3398CB831A47E1FF002E8B89 /* MenuBlock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuBlock.swift; sourceTree = "<group>"; };
+		3398CB851A47ECF5002E8B89 /* email_sel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = email_sel.png; path = Images/email_sel.png; sourceTree = "<group>"; };
+		3398CB861A47ECF5002E8B89 /* email.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = email.png; path = Images/email.png; sourceTree = "<group>"; };
+		3398CB891A47ED20002E8B89 /* cam_sel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = cam_sel.png; path = Images/cam_sel.png; sourceTree = "<group>"; };
+		3398CB8A1A47ED20002E8B89 /* cam.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = cam.png; path = Images/cam.png; sourceTree = "<group>"; };
+		3398CB8D1A47ED39002E8B89 /* settings_sel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = settings_sel.png; path = Images/settings_sel.png; sourceTree = "<group>"; };
+		3398CB8E1A47ED39002E8B89 /* settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = settings.png; path = Images/settings.png; sourceTree = "<group>"; };
 		33DAB8421A452360007F6A02 /* Menu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
 		33FCAEF81A3B5B9A007FBFF2 /* NotificationBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationBox.swift; sourceTree = "<group>"; };
 		746017FE711EFBFBB66A6252 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -136,6 +152,7 @@
 			isa = PBXGroup;
 			children = (
 				33DAB8421A452360007F6A02 /* Menu.swift */,
+				3398CB831A47E1FF002E8B89 /* MenuBlock.swift */,
 				338EB0981A45261E008CF15C /* OCRWindow.swift */,
 				33FCAEF81A3B5B9A007FBFF2 /* NotificationBox.swift */,
 			);
@@ -145,7 +162,14 @@
 		338EB09A1A45363C008CF15C /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				3398CB851A47ECF5002E8B89 /* email_sel.png */,
+				3398CB861A47ECF5002E8B89 /* email.png */,
 				338EB09B1A45364C008CF15C /* help.png */,
+				3398CB811A47DAF1002E8B89 /* help_sel.png */,
+				3398CB891A47ED20002E8B89 /* cam_sel.png */,
+				3398CB8A1A47ED20002E8B89 /* cam.png */,
+				3398CB8D1A47ED39002E8B89 /* settings_sel.png */,
+				3398CB8E1A47ED39002E8B89 /* settings.png */,
 			);
 			name = Images;
 			sourceTree = "<group>";
@@ -249,9 +273,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3398CB8F1A47ED39002E8B89 /* settings_sel.png in Resources */,
 				334FA4621A3B56480065A87D /* LaunchScreen.xib in Resources */,
+				3398CB8B1A47ED20002E8B89 /* cam_sel.png in Resources */,
 				334FA45F1A3B56480065A87D /* Images.xcassets in Resources */,
+				3398CB8C1A47ED20002E8B89 /* cam.png in Resources */,
+				3398CB881A47ECF5002E8B89 /* email.png in Resources */,
+				3398CB901A47ED39002E8B89 /* settings.png in Resources */,
+				3398CB871A47ECF5002E8B89 /* email_sel.png in Resources */,
 				338EB09C1A45364C008CF15C /* help.png in Resources */,
+				3398CB821A47DAF1002E8B89 /* help_sel.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -304,6 +335,7 @@
 			files = (
 				33DAB8431A452360007F6A02 /* Menu.swift in Sources */,
 				334FA47C1A3B567F0065A87D /* MainController.swift in Sources */,
+				3398CB841A47E1FF002E8B89 /* MenuBlock.swift in Sources */,
 				334FA47B1A3B567F0065A87D /* CamHomeController.swift in Sources */,
 				338EB0991A45261E008CF15C /* OCRWindow.swift in Sources */,
 				33FCAEF91A3B5B9A007FBFF2 /* NotificationBox.swift in Sources */,

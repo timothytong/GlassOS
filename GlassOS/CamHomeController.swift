@@ -14,6 +14,7 @@ class CamHomeController: UIViewController {
     var captureDevice:AVCaptureDevice?
     var notificationBox: NotificationBox!
     var mainMenu: Menu!
+    var mainMenuArray: Array<NSDictionary>!
     override func viewDidLoad() {
         println("CamView did load")
         super.viewDidLoad()
@@ -45,9 +46,22 @@ class CamHomeController: UIViewController {
         captureSession.startRunning()
         notificationBox = NotificationBox(frame: CGRectMake(view.frame.width - 110, 10, 100, 60))
         
-        mainMenu = Menu(dimension: self.view.frame, numOfItems: 4, arrayDicts: nil)
+        var helpImg = UIImage(named: "help.png")
+        var sel_helpImg = UIImage(named: "help_sel.png")
+        var helpDict = NSDictionary(objects: NSArray(objects: helpImg!, sel_helpImg!, "Translation"), forKeys: ["norm_img","sel_img","caption"])
+        var emailImg = UIImage(named: "email.png")
+        var sel_emailImg = UIImage(named: "email_sel.png")
+        var emailDict = NSDictionary(objects: NSArray(objects: emailImg!, sel_emailImg!, "Email"), forKeys: ["norm_img","sel_img","caption"])
+        var camImg = UIImage(named: "cam.png")
+        var sel_camImg = UIImage(named: "cam_sel.png")
+        var camDict = NSDictionary(objects: NSArray(objects: camImg!, sel_camImg!, "Camera"), forKeys: ["norm_img","sel_img","caption"])
+        var settings = UIImage(named: "settings.png")
+        var sel_settingsImg = UIImage(named: "settings_sel.png")
+        var settingsDict = NSDictionary(objects: NSArray(objects: settings!, sel_settingsImg!, "Settings"), forKeys: ["norm_img","sel_img","caption"])
+        
+        mainMenuArray = [helpDict, emailDict, camDict, settingsDict]
+        mainMenu = Menu(dimension: self.view.frame, numOfItems: 4, arrayDicts: mainMenuArray)
         view.addSubview(mainMenu)
-
     }
     
     

@@ -8,71 +8,111 @@
 
 import UIKit
 
-class Menu: UIView {
+class Menu: UIView, MenuBlockDelegate {
     var numItems:Int!
     var background:UIView!
     var slots:Array<UIView>!
-    
-    init(dimension: CGRect , numOfItems: Int, arrayDicts: Array<NSDictionary>?){
+    var activ_slot:MenuBlock?
+    let singleHeight:CGFloat = 44
+    var block_is_animating = false
+    init(dimension: CGRect , numOfItems: Int, arrayDicts: Array<NSDictionary>!){
+        /*
+        arrayDicts consists of following elements: norm_img, sel_img, func_name
+        */
         let height = 46 * CGFloat(numOfItems) + 2
         super.init(frame: CGRectMake(dimension.width - 60, dimension.height - height - 10, 50, height))
-        let singleHeight:CGFloat = 44
+        
         var tabs = Array<UIView>()
         numItems = numOfItems
         slots = Array<UIView>()
         background = UIView(frame: CGRectMake(0, 50, frame.width, frame.height))
-        background.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.7)
+        background.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.4)
         alpha = 0
-        
         backgroundColor = UIColor.clearColor()
-        // Actual implementation
-        //        if arrayDicts.count < numOfItems{
-        //            numItems = arrayDicts.count
-        //        }
+        //Actual implementation
+        if arrayDicts?.count < numOfItems{
+            numItems = arrayDicts?.count
+        }
         for i in 0..<numItems{
-            var block = UIView(frame: CGRectMake(3, 48 * CGFloat(i), singleHeight, singleHeight))//0 -> block.height
-            //            block.layer.borderColor = UIColor.blackColor().CGColor
-            //            block.layer.borderWidth = 0.5
-            var helpImg = UIImage(named: "help.png")
-            var helpImgView = UIImageView(frame: CGRectMake(0, 0, singleHeight, singleHeight))
-            helpImgView.image = helpImg
-            block.clipsToBounds = true
+            var dict = arrayDicts![i] as NSDictionary
+            var block = MenuBlock(frame: CGRectMake(3, 48 * CGFloat(i), singleHeight, singleHeight), img: dict.objectForKey("norm_img") as UIImage, hilight_img: dict.objectForKey("sel_img") as UIImage, func_name: dict.objectForKey("caption") as String)
+            block.tag = i
+            block.delegate = self
+            var tap = UITapGestureRecognizer(target: self, action: "blockTapped:")
+            block.addGestureRecognizer(tap)
             block.alpha = 0
-            block.addSubview(helpImgView)
+            block.clipsToBounds = false
             background.addSubview(block)
             slots.append(block)
         }
         addSubview(background)
         var timer = NSTimer.scheduledTimerWithTimeInterval(4, target: self, selector: "showMenu", userInfo: nil, repeats: false)
-        println("Counting")
     }
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     func showMenu(){
-        println("Showing")
-        UIView.animateWithDuration(1, delay: 0, options: UIViewAnimationOptions.CurveEaseIn, animations: { () -> Void in
+        //        println("Showing")
+        UIView.animateWithDuration(0.3, delay: 0, options: UIViewAnimationOptions.CurveEaseIn, animations: { () -> Void in
             self.alpha = 1
             self.background.frame = CGRectMake(0, 0, self.background.frame.width, self.background.frame.height)
             for i in 0..<self.numItems{
                 self.showOptionNum(i)
             }
             }) { (complete) -> Void in
-                
+                var block = self.slots[0] as MenuBlock
+                block.makeActive()
+                self.activ_slot = block
+                var timer = NSTimer.scheduledTimerWithTimeInterval(30, target: self, selector: "hideMenu", userInfo: nil, repeats: false)
         }
     }
     func showOptionNum(input:Int){
-        println("showing \(input)")
+        //        println("showing \(input)")
         var i = input
-        UIView.animateWithDuration(1, delay: (0.2 * Double(i)), options: UIViewAnimationOptions.CurveEaseIn, animations: { () -> Void in
+        UIView.animateWithDuration(1, delay: (0.1 * (Double(i)+1)), options: UIViewAnimationOptions.CurveEaseIn, animations: { () -> Void in
             var block = self.slots[i]
-            block.frame = CGRectMake(3,CGFloat(2+2*i+i*44) , 44, 44)
+            block.frame = CGRectMake(3,CGFloat(2+2*i+i*44) , self.singleHeight, self.singleHeight)
             block.alpha = 1
             }) { (complete) -> Void in
         }
     }
     func hideMenu(){
-        
+        for i in 0..<self.numItems{
+            self.hideOptionNum(i)
+        }
+        UIView.animateWithDuration(0.3, delay: (0.1 * (Double(self.numItems)+1)), options: UIViewAnimationOptions.CurveEaseIn, animations: { () -> Void in
+            self.alpha = 0
+            self.background.frame = CGRectMake(0, 50, self.background.frame.width, self.background.frame.height)
+            }) { (complete) -> Void in
+        }
+    }
+    func hideOptionNum(input:Int){
+        //        println("hiding \(input)")
+        var i = input
+        UIView.animateWithDuration(1, delay: (0.1 * (Double(i)+1)), options: UIViewAnimationOptions.CurveEaseIn, animations: { () -> Void in
+            var block = self.slots[i]
+            block.frame = CGRectMake(3,48 * CGFloat(i) , self.singleHeight, self.singleHeight)
+            block.alpha = 0
+            }) { (complete) -> Void in
+        }
+    }
+    func blockTapped(sender:UITapGestureRecognizer){
+        //        println("block tapped, sender tag: \(sender.view!.tag)")
+        var targetBlock = slots[sender.view!.tag] as MenuBlock
+        hilightSlot(targetBlock)
+        block_is_animating = true
+    }
+    func hilightSlot(block: MenuBlock){
+        if !block_is_animating{
+            activ_slot?.makeInactive()
+            activ_slot = block
+            activ_slot!.makeActive()
+        }
+    }
+    func animationCompl(){
+        if block_is_animating{
+            block_is_animating = false
+        }
     }
     
 }
