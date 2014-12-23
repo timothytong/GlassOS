@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		334D62A61A490CB0000CB824 /* SessionCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 334D62A51A490CB0000CB824 /* SessionCenter.swift */; };
 		334FA4581A3B56480065A87D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 334FA4571A3B56480065A87D /* AppDelegate.swift */; };
 		334FA45F1A3B56480065A87D /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 334FA45E1A3B56480065A87D /* Images.xcassets */; };
 		334FA4621A3B56480065A87D /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 334FA4601A3B56480065A87D /* LaunchScreen.xib */; };
@@ -40,6 +41,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		334D62A51A490CB0000CB824 /* SessionCenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionCenter.swift; sourceTree = "<group>"; };
 		334FA4521A3B56480065A87D /* GlassOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GlassOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		334FA4561A3B56480065A87D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		334FA4571A3B56480065A87D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -110,6 +112,7 @@
 		334FA4541A3B56480065A87D /* GlassOS */ = {
 			isa = PBXGroup;
 			children = (
+				334D62A51A490CB0000CB824 /* SessionCenter.swift */,
 				337B8E4D1A45578E009A01F7 /* UIElements */,
 				334FA4771A3B567F0065A87D /* RootController.swift */,
 				334FA4781A3B567F0065A87D /* CamHomeController.swift */,
@@ -341,6 +344,7 @@
 				33FCAEF91A3B5B9A007FBFF2 /* NotificationBox.swift in Sources */,
 				334FA4581A3B56480065A87D /* AppDelegate.swift in Sources */,
 				334FA47A1A3B567F0065A87D /* RootController.swift in Sources */,
+				334D62A61A490CB0000CB824 /* SessionCenter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

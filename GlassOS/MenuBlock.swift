@@ -16,13 +16,24 @@ class MenuBlock: UIView {
     var sel_imgView: UIImageView!
     var caption: String!
     var label: UILabel!
-    var isActive: Bool!
+    var isHilighted: Bool!
+    var isEnabled: Bool!
+    var backCircle: UIView!
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     init(frame: CGRect, img: UIImage!, hilight_img: UIImage!, func_name: String!){
         super.init(frame: frame)
-        isActive = false
+        backCircle = UIView(frame: CGRectMake(0, 0, frame.width, frame.height))
+        var path = UIBezierPath(roundedRect: CGRectMake(0, 0, frame.width, frame.height), cornerRadius: frame.width/2)
+        var mask = CAShapeLayer()
+        mask.path = path.CGPath
+        backCircle.layer.mask = mask
+        backCircle.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.4)
+        addSubview(backCircle)
+        backCircle.alpha = 0
+        isHilighted = false
+        isEnabled = false
         imgView = UIImageView(frame: CGRectMake(0, 0, frame.width, frame.height))
         imgView.image = img
         addSubview(imgView)
@@ -38,31 +49,62 @@ class MenuBlock: UIView {
         label.shadowOffset = CGSizeMake(-0.5, 0.5)
         label.textAlignment = NSTextAlignment.Right
         label.textColor = UIColor.whiteColor()
-        
         addSubview(label)
     }
-    func makeActive(){
-        if !isActive{
+    func highlight(){
+        if !isHilighted{
             label.textColor = UIColor.blackColor()
             label.shadowColor = UIColor(red: 150/255, green: 150/255, blue: 150/255, alpha: 0.8)
             UIView.animateWithDuration(0.25, delay: 0, options: UIViewAnimationOptions.CurveEaseIn, animations: { () -> Void in
                 self.sel_imgView.alpha = 1
                 }, completion: { (complete) -> Void in
-                    self.isActive = true
+                    self.isHilighted = true
                     self.delegate?.animationCompl()
             })
         }
     }
-    func makeInactive(){
-        if (isActive == true){
+    func unhighlight(){
+        if (isHilighted == true){
             label.textColor = UIColor.whiteColor()
             label.shadowColor = UIColor(red: 200/255, green: 200/255, blue: 200/255, alpha: 0.8)
             UIView.animateWithDuration(0.25, delay: 0, options: UIViewAnimationOptions.CurveEaseIn, animations: { () -> Void in
                 self.sel_imgView.alpha = 0
                 }, completion: { (complete) -> Void in
-                    self.isActive = false
+                    self.isHilighted = false
                     self.delegate?.animationCompl()
             })
         }
+    }
+    func enable(){
+        if !isEnabled{
+            UIView.animateWithDuration(0.2, delay: 0, options: UIViewAnimationOptions.CurveEaseIn, animations: { () -> Void in
+                self.backCircle.alpha = 1
+                }) { (complete) -> Void in
+                    self.isEnabled = true
+                    self.animateBackground()
+            }
+        }
+    }
+    func animateBackground(){
+        println("Animating!!")
+        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            UIView.animateWithDuration(0.3, delay: 0, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
+                self.backCircle.transform = CGAffineTransformMakeScale(1.3, 1.3)
+                }, completion: { (complete) -> Void in
+                    UIView.animateWithDuration(0.3, delay: 0, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
+                        self.backCircle.transform = CGAffineTransformMakeScale(1, 1)
+                        }, completion: { (complete) -> Void in
+                            if (self.isEnabled == true)
+                            {
+                                self.animateBackground()
+                            }
+                    })
+            })
+        })
+        
+
+    }
+    func disable(){
+        isEnabled = false
     }
 }

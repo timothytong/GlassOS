@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+// TODO: when hiding menu, check which mode is ACTIVE(enabled) then disable.
 class Menu: UIView, MenuBlockDelegate {
     var numItems:Int!
     var background:UIView!
@@ -26,7 +26,7 @@ class Menu: UIView, MenuBlockDelegate {
         numItems = numOfItems
         slots = Array<UIView>()
         background = UIView(frame: CGRectMake(0, 50, frame.width, frame.height))
-        background.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.4)
+        background.backgroundColor = UIColor.clearColor()
         alpha = 0
         backgroundColor = UIColor.clearColor()
         //Actual implementation
@@ -39,7 +39,11 @@ class Menu: UIView, MenuBlockDelegate {
             block.tag = i
             block.delegate = self
             var tap = UITapGestureRecognizer(target: self, action: "blockTapped:")
+            var doubleTap = UITapGestureRecognizer(target: self, action: "blockDoubleTapped:")
+            doubleTap.numberOfTapsRequired = 2
+            tap.requireGestureRecognizerToFail(doubleTap)
             block.addGestureRecognizer(tap)
+            block.addGestureRecognizer(doubleTap)
             block.alpha = 0
             block.clipsToBounds = false
             background.addSubview(block)
@@ -61,7 +65,7 @@ class Menu: UIView, MenuBlockDelegate {
             }
             }) { (complete) -> Void in
                 var block = self.slots[0] as MenuBlock
-                block.makeActive()
+                block.highlight()
                 self.activ_slot = block
                 var timer = NSTimer.scheduledTimerWithTimeInterval(30, target: self, selector: "hideMenu", userInfo: nil, repeats: false)
         }
@@ -102,11 +106,16 @@ class Menu: UIView, MenuBlockDelegate {
         hilightSlot(targetBlock)
         block_is_animating = true
     }
+    func blockDoubleTapped(sender:UITapGestureRecognizer){
+        println("block double-tapped, sender tag: \(sender.view!.tag)")
+        var targetBlock = slots[sender.view!.tag] as MenuBlock
+        targetBlock.enable()
+    }
     func hilightSlot(block: MenuBlock){
         if !block_is_animating{
-            activ_slot?.makeInactive()
+            activ_slot?.unhighlight()
             activ_slot = block
-            activ_slot!.makeActive()
+            activ_slot!.highlight()
         }
     }
     func animationCompl(){
