@@ -1,5 +1,5 @@
 //
-//  OCRWindow.swift
+//  TranslationBox.swift
 //  GlassOS
 //
 //  Created by Timothy Tong on 2014-12-19.
@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
-class OCRWindow: UIView {
-
+// OCR selection box
+class TranslationBox: UIView {
+    
 }

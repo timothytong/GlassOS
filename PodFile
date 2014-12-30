@@ -1,1 +1,3 @@
 pod 'TesseractOCRiOS', '3.4.0'
+
+pod 'SVProgressHUD', :head

@@ -1,1 +1,1 @@
-/* Redundant. Delete me. */
+../../../TesseractOCRiOS/TesseractOCR/include/tesseract/secname.h

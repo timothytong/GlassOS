@@ -16,6 +16,7 @@ class MenuBlock: UIView {
     var sel_imgView: UIImageView!
     var caption: String!
     var label: UILabel!
+    var labelBG: UIView!
     var isHilighted: Bool!
     var isEnabled: Bool!
     var backCircle: UIView!
@@ -42,36 +43,41 @@ class MenuBlock: UIView {
         addSubview(sel_imgView)
         sel_imgView.alpha = 0
         caption = func_name
-        label = UILabel(frame: CGRectMake(-150, 0, 140, frame.height))
+        labelBG = UIView(frame: CGRectMake(-105, 0, 100, frame.height))
+        label = UILabel(frame: CGRectMake(0, 0, 95, frame.height))
         label.text = caption
         label.font = UIFont(name: "HelveticaNeue-Thin", size: 20)
-        label.shadowColor = UIColor(red: 200/255, green: 200/255, blue: 200/255, alpha: 0.8)
-        label.shadowOffset = CGSizeMake(-0.5, 0.5)
+        //        label.shadowColor = UIColor(red: 200/255, green: 200/255, blue: 200/255, alpha: 0.8)
+        //        label.shadowOffset = CGSizeMake(-0.5, 0.5)
         label.textAlignment = NSTextAlignment.Right
-        label.textColor = UIColor.whiteColor()
-        addSubview(label)
+        label.textColor = UIColor.blackColor()
+        labelBG.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.3)
+        labelBG.addSubview(label)
+        addSubview(labelBG)
     }
     func highlight(){
         if !isHilighted{
-            label.textColor = UIColor.blackColor()
-            label.shadowColor = UIColor(red: 150/255, green: 150/255, blue: 150/255, alpha: 0.8)
+            //            label.shadowColor = UIColor(red: 150/255, green: 150/255, blue: 150/255, alpha: 0.8)
             UIView.animateWithDuration(0.25, delay: 0, options: UIViewAnimationOptions.CurveEaseIn, animations: { () -> Void in
                 self.sel_imgView.alpha = 1
                 }, completion: { (complete) -> Void in
                     self.isHilighted = true
                     self.delegate?.animationCompl()
+                    self.label.textColor = UIColor.whiteColor()
+                    self.labelBG.backgroundColor = UIColor.blackColor()
             })
         }
     }
     func unhighlight(){
         if (isHilighted == true){
-            label.textColor = UIColor.whiteColor()
-            label.shadowColor = UIColor(red: 200/255, green: 200/255, blue: 200/255, alpha: 0.8)
             UIView.animateWithDuration(0.25, delay: 0, options: UIViewAnimationOptions.CurveEaseIn, animations: { () -> Void in
                 self.sel_imgView.alpha = 0
                 }, completion: { (complete) -> Void in
                     self.isHilighted = false
                     self.delegate?.animationCompl()
+                    self.label.textColor = UIColor.whiteColor()
+                    //            label.shadowColor = UIColor(red: 200/255, green: 200/255, blue: 200/255, alpha: 0.8)
+                    self.labelBG.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.3)
             })
         }
     }
@@ -101,8 +107,6 @@ class MenuBlock: UIView {
                     })
             })
         })
-        
-
     }
     func disable(){
         isEnabled = false

@@ -12,9 +12,9 @@ class Menu: UIView, MenuBlockDelegate {
     var numItems:Int!
     var background:UIView!
     var slots:Array<UIView>!
-    var activ_slot:MenuBlock?
-    let singleHeight:CGFloat = 44
-    var block_is_animating = false
+    private var activ_slot:MenuBlock?
+    private let singleHeight:CGFloat = 44
+    private var block_is_animating = false
     init(dimension: CGRect , numOfItems: Int, arrayDicts: Array<NSDictionary>!){
         /*
         arrayDicts consists of following elements: norm_img, sel_img, func_name

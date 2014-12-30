@@ -9,12 +9,15 @@
 import UIKit
 import AVFoundation
 
-class CamHomeController: UIViewController {
-    var captureSession:AVCaptureSession!
-    var captureDevice:AVCaptureDevice?
-    var notificationBox: NotificationBox!
-    var mainMenu: Menu!
-    var mainMenuArray: Array<NSDictionary>!
+class CamHomeController: UIViewController, CursorDelegate {
+    private var captureSession:AVCaptureSession!
+    private var captureDevice:AVCaptureDevice?
+    private var mainMenu: Menu!
+    private var mainMenuArray: Array<NSDictionary>!
+    private var cursor: Cursor!
+    private var cursorIsVisible = false
+    private var selRect: UIView!
+    private var startingPoint = CGPointMake(0, 0)
     override func viewDidLoad() {
         super.viewDidLoad()
         println("CamView did load")
@@ -32,6 +35,14 @@ class CamHomeController: UIViewController {
         var settings = UIImage(named: "settings.png")
         var sel_settingsImg = UIImage(named: "settings_sel.png")
         var settingsDict = NSDictionary(objects: NSArray(objects: settings!, sel_settingsImg!, "Settings"), forKeys: ["norm_img","sel_img","caption"])
+        cursor = Cursor()
+        cursor.clipsToBounds = false
+        cursor.delegate = self
+        selRect = UIView(frame: CGRectMake(0, 0, 0, 0))
+        selRect.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.35)
+        selRect.layer.borderColor = UIColor.whiteColor().CGColor
+        selRect.layer.borderWidth = 1
+        selRect.clipsToBounds = false
         
         mainMenuArray = [helpDict, emailDict, camDict, settingsDict]
         captureSession = AVCaptureSession()
@@ -59,12 +70,78 @@ class CamHomeController: UIViewController {
         previewLayer?.frame = view.layer.frame
         view.layer.addSublayer(previewLayer)
         captureSession.startRunning()
-        notificationBox = NotificationBox(frame: CGRectMake(view.frame.width - 110, 10, 100, 60))
-        
         
         mainMenu = Menu(dimension: self.view.frame, numOfItems: 4, arrayDicts: mainMenuArray)
         view.addSubview(mainMenu)
+        view.addSubview(cursor)
+        view.addSubview(selRect)
+        
+        var longPressGesture = UILongPressGestureRecognizer(target: self, action: "showCursor")
+        longPressGesture.minimumPressDuration = 1
+        view.addGestureRecognizer(longPressGesture)
+        
     }
     
+    func showCursor(){
+        if !cursorIsVisible{
+            println("showing cursor")
+            cursor.show()
+            cursorIsVisible = true
+            var panGesture = UIPanGestureRecognizer(target: self, action: "drag:")
+            panGesture.maximumNumberOfTouches = 1
+            panGesture.minimumNumberOfTouches = 1
+            view.addGestureRecognizer(panGesture)
+        }
+    }
+    
+    func drag(sender: UIPanGestureRecognizer){
+        view.bringSubviewToFront(sender.view!)
+        var translationPoint = sender.translationInView(view)
+        if sender.state == UIGestureRecognizerState.Began{
+            startingPoint = cursor.frame.origin
+            cursor.startDragging(startingPoint)
+        }
+        if translationPoint.x >= 0 && translationPoint.x <= view.frame.width && translationPoint.y >= 0 && translationPoint.y < view.frame.height{
+            cursor.moveWithTranslationPoint(translationPoint)
+        }
+        
+        if sender.state == UIGestureRecognizerState.Ended || sender.state == UIGestureRecognizerState.Cancelled{
+            cursor.endDragging()
+        }
+    }
+    
+    func finishedSelection(){
+        UIView.animateWithDuration(0.3, delay: 0, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
+            self.selRect.alpha = 0
+            }) { (complete) -> Void in
+                self.selRect.frame = CGRectMake(0, 0, 0, 0)
+        }
+    }
+    
+    func moveSelRectToPoint(point:CGPoint){
+        selRect.frame.size = CGSizeMake(abs(point.x - startingPoint.x), abs(point.y - startingPoint.y))
+        if point.x < startingPoint.x && point.y < startingPoint.y{
+            selRect.frame.origin = CGPointMake(cursor.frame.origin.x + 6, cursor.frame.origin.y + 6)
+        }
+        else if point.x < startingPoint.x && point.y >= startingPoint.y{
+            selRect.frame.origin = CGPointMake(cursor.frame.origin.x + 6, cursor.frame.origin.y  - selRect.frame.size.height + 6)
+        }
+        else if point.x >= startingPoint.x && point.y < startingPoint.y{
+            selRect.frame.origin = CGPointMake(cursor.frame.origin.x - selRect.frame.size.width + 6, cursor.frame.origin.y + 6)
+        }
+    }
+    
+    func positionSelRectAtPoint(point: CGPoint){
+        selRect.frame.origin = point
+        selRect.alpha = 1
+    }
+    
+    func focus(){
+        
+    }
+    
+    func takePic(){
+        
+    }
     
 }

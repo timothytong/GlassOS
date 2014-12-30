@@ -11,6 +11,7 @@ import UIKit
 class RootController: UIViewController {
     var controller:UIViewController?
     var pageView:UIView?
+    var notificationBox: NotificationBox!
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
@@ -30,6 +31,7 @@ class RootController: UIViewController {
             self.view.addSubview(self.pageView!)
             self.pageView!.addSubview(pCont.view)
         }
+        notificationBox = NotificationBox(frame: CGRectMake(view.frame.width - 110, 10, 100, 60))
     }
     
     func transitionToPage(controller:UIViewController?){
@@ -48,7 +50,7 @@ class RootController: UIViewController {
                     self.pageView!.alpha = 1
                     }) { (complete) -> Void in
                 }
-
+                
                 
         }
     }

@@ -1,10 +1,13 @@
 PODS:
+  - SVProgressHUD (HEAD based on 1.1.2)
   - TesseractOCRiOS (3.4.0)
 
 DEPENDENCIES:
+  - SVProgressHUD (HEAD)
   - TesseractOCRiOS (= 3.4.0)
 
 SPEC CHECKSUMS:
+  SVProgressHUD: da7a49e789af645d9279ffbca62318945a832438
   TesseractOCRiOS: b2bdfc2c1041114ce146d2086d2376cfae17ff26
 
 COCOAPODS: 0.35.0

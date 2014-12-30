@@ -35,7 +35,7 @@ class NotificationBox: UIView {
         addGestureRecognizer(tap)
     }
     func setLabel(string:String){
-        msgLabel.text = string 
+        msgLabel.text = string
     }
     
     func notificationClicked(){
@@ -48,8 +48,8 @@ class NotificationBox: UIView {
         UIView.animateWithDuration(0.4, delay: 0, options: UIViewAnimationOptions.CurveEaseOut, animations: { () -> Void in
             self.alpha = 0.7
             self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y + 30, self.frame.width, self.frame.height)
-        }) { (complete) -> Void in
-            let timer = NSTimer.scheduledTimerWithTimeInterval(5, target: self, selector: "hide", userInfo: nil, repeats: false)
+            }) { (complete) -> Void in
+                let timer = NSTimer.scheduledTimerWithTimeInterval(5, target: self, selector: "hide", userInfo: nil, repeats: false)
         }
     }
     
