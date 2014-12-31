@@ -18,10 +18,13 @@ class CamHomeController: UIViewController, CursorDelegate {
     private var cursorIsVisible = false
     private var selRect: UIView!
     private var startingPoint = CGPointMake(0, 0)
+    private var activeUIElements = Dictionary<String, UIView>()
     override func viewDidLoad() {
         super.viewDidLoad()
         println("CamView did load")
         view.backgroundColor = UIColor.whiteColor()
+        
+        // Main Menu
         // Can add youtube, music, safari etc...
         var helpImg = UIImage(named: "help.png")
         var sel_helpImg = UIImage(named: "help_sel.png")
@@ -35,6 +38,11 @@ class CamHomeController: UIViewController, CursorDelegate {
         var settings = UIImage(named: "settings.png")
         var sel_settingsImg = UIImage(named: "settings_sel.png")
         var settingsDict = NSDictionary(objects: NSArray(objects: settings!, sel_settingsImg!, "Settings"), forKeys: ["norm_img","sel_img","caption"])
+        
+        // Dialog box
+        
+        var timer = NSTimer.scheduledTimerWithTimeInterval(4, target: self, selector: "showTestPromptWindow", userInfo: nil, repeats: false)
+        
         cursor = Cursor()
         cursor.clipsToBounds = false
         cursor.delegate = self
@@ -76,6 +84,7 @@ class CamHomeController: UIViewController, CursorDelegate {
         view.addSubview(cursor)
         view.addSubview(selRect)
         
+        
         var longPressGesture = UILongPressGestureRecognizer(target: self, action: "showCursor")
         longPressGesture.minimumPressDuration = 1
         view.addGestureRecognizer(longPressGesture)
@@ -91,6 +100,7 @@ class CamHomeController: UIViewController, CursorDelegate {
             panGesture.maximumNumberOfTouches = 1
             panGesture.minimumNumberOfTouches = 1
             view.addGestureRecognizer(panGesture)
+            activeUIElements.updateValue(cursor, forKey: "cursor")
         }
     }
     
@@ -100,10 +110,30 @@ class CamHomeController: UIViewController, CursorDelegate {
         if sender.state == UIGestureRecognizerState.Began{
             startingPoint = cursor.frame.origin
             cursor.startDragging(startingPoint)
+            activeUIElements.updateValue(selRect, forKey: "selRect")
         }
-        if translationPoint.x >= 0 && translationPoint.x <= view.frame.width && translationPoint.y >= 0 && translationPoint.y < view.frame.height{
+        //check if current point is still in bounds
+        if (cursor.frame.origin.x + 6 >= 0 && cursor.frame.origin.x + 6 <= view.frame.width) && (cursor.frame.origin.y + 6 >= 0 && cursor.frame.origin.y + 6 <= view.frame.height){
             cursor.moveWithTranslationPoint(translationPoint)
         }
+        else{
+            // Adjustments..
+            var x: CGFloat = 0, y: CGFloat = 0
+            if cursor.frame.origin.x < -6{
+                x = -5
+            }
+            else if cursor.frame.origin.x + 6 > view.frame.width{
+                x = view.frame.width - 7
+            }
+            if cursor.frame.origin.y < -6{
+                y = -5
+            }
+            else if cursor.frame.origin.y + 6 > view.frame.height{
+                y = view.frame.height - 7
+            }
+            cursor.frame.origin = CGPointMake(x, y)
+        }
+        
         
         if sender.state == UIGestureRecognizerState.Ended || sender.state == UIGestureRecognizerState.Cancelled{
             cursor.endDragging()
@@ -115,6 +145,7 @@ class CamHomeController: UIViewController, CursorDelegate {
             self.selRect.alpha = 0
             }) { (complete) -> Void in
                 self.selRect.frame = CGRectMake(0, 0, 0, 0)
+                self.activeUIElements.removeValueForKey("selRect")
         }
     }
     
@@ -124,7 +155,7 @@ class CamHomeController: UIViewController, CursorDelegate {
             selRect.frame.origin = CGPointMake(cursor.frame.origin.x + 6, cursor.frame.origin.y + 6)
         }
         else if point.x < startingPoint.x && point.y >= startingPoint.y{
-            selRect.frame.origin = CGPointMake(cursor.frame.origin.x + 6, cursor.frame.origin.y  - selRect.frame.size.height + 6)
+            selRect.frame.origin = CGPointMake(cursor.frame.origin.x + 6, cursor.frame.origin.y - selRect.frame.size.height + 6)
         }
         else if point.x >= startingPoint.x && point.y < startingPoint.y{
             selRect.frame.origin = CGPointMake(cursor.frame.origin.x - selRect.frame.size.width + 6, cursor.frame.origin.y + 6)
@@ -143,5 +174,10 @@ class CamHomeController: UIViewController, CursorDelegate {
     func takePic(){
         
     }
-    
+    func showTestPromptWindow(){
+        var strings = ["Yes","No","Cancel"]
+        var promptBox = PromptBox(screenSize: CGSizeMake(view.frame.width, view.frame.height), title: "Notice", msg: "This is a test message", buttons: strings)
+        let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
+        appDelegate.disablePageAndShowDialog(promptBox)
+    }
 }

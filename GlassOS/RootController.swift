@@ -12,6 +12,10 @@ class RootController: UIViewController {
     var controller:UIViewController?
     var pageView:UIView?
     var notificationBox: NotificationBox!
+    var disableView:UIView!
+    var curActivePromptWindow: PromptBox?
+    var promptBoxIsCurrentlyVisible = false
+    var promptBoxQueue: Array<PromptBox>!
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
@@ -25,12 +29,18 @@ class RootController: UIViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.setNeedsStatusBarAppearanceUpdate()
-        self.pageView = UIView(frame: CGRectMake(0, 0, self.view.frame.width, self.view.frame.height))
-        if let pCont = self.controller{
-            self.view.addSubview(self.pageView!)
-            self.pageView!.addSubview(pCont.view)
+        setNeedsStatusBarAppearanceUpdate()
+        pageView = UIView(frame: CGRectMake(0, 0, self.view.frame.width, self.view.frame.height))
+        if let pCont = controller{
+            view.addSubview(pageView!)
+            pageView!.addSubview(pCont.view)
         }
+        disableView = UIView(frame: view.frame)
+        disableView.backgroundColor = UIColor.clearColor()
+        disableView.alpha = 0
+        disableView.userInteractionEnabled = false
+        view.addSubview(disableView)
+        promptBoxQueue = Array<PromptBox>()
         notificationBox = NotificationBox(frame: CGRectMake(view.frame.width - 110, 10, 100, 60))
     }
     
@@ -53,5 +63,25 @@ class RootController: UIViewController {
                 
                 
         }
+    }
+    
+    func disablePageAndShowDialog(promptWindow: PromptBox){
+        if !promptBoxIsCurrentlyVisible{
+            promptBoxIsCurrentlyVisible = true
+            curActivePromptWindow = promptWindow
+            disableView.addSubview(curActivePromptWindow!)
+            disableView.bringSubviewToFront(curActivePromptWindow!)
+            UIView.animateWithDuration(0.4, delay: 0, options: UIViewAnimationOptions.CurveEaseOut, animations: { () -> Void in
+                self.disableView.alpha = 0.5
+                }) { (complete) -> Void in
+            }
+        }
+        else{
+            promptBoxQueue.append(promptWindow)
+        }
+    }
+    
+    func dismissCurrentPromptWindow(){
+
     }
 }

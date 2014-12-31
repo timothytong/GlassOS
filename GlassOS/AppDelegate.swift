@@ -17,24 +17,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var camController: CamHomeController?
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
-        self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
-        self.window?.backgroundColor = UIColor.whiteColor()
-        self.mainController = MainController()
-        self.rootController = RootController(nibName: nil, bundle: nil)
-        self.rootController?.useController(self.mainController)
-        self.camController = CamHomeController()
-        self.window!.rootViewController = self.rootController
-        self.window?.makeKeyAndVisible()
+        window = UIWindow(frame: UIScreen.mainScreen().bounds)
+        window?.backgroundColor = UIColor.whiteColor()
+        mainController = MainController()
+        rootController = RootController(nibName: nil, bundle: nil)
+        rootController?.useController(mainController)
+        camController = CamHomeController()
+        window!.rootViewController = rootController
+        window?.makeKeyAndVisible()
         return true
     }
     
     func transitionToCam(){
-        self.camController = CamHomeController()
-        self.rootController?.transitionToPage(self.camController)
+        camController = CamHomeController()
+        rootController?.transitionToPage(camController)
     }
     
     func disablePageAndShowDialog(dialogWindow: PromptBox){
-        
+        rootController?.disablePageAndShowDialog(dialogWindow)
     }
     
     func applicationWillResignActive(application: UIApplication) {

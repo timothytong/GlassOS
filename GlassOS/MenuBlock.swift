@@ -36,6 +36,7 @@ class MenuBlock: UIView {
         isHilighted = false
         isEnabled = false
         imgView = UIImageView(frame: CGRectMake(0, 0, frame.width, frame.height))
+        imgView.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.3)
         imgView.image = img
         addSubview(imgView)
         sel_imgView = UIImageView(frame: CGRectMake(0, 0, frame.width, frame.height))
@@ -75,7 +76,7 @@ class MenuBlock: UIView {
                 }, completion: { (complete) -> Void in
                     self.isHilighted = false
                     self.delegate?.animationCompl()
-                    self.label.textColor = UIColor.whiteColor()
+                    self.label.textColor = UIColor.blackColor()
                     //            label.shadowColor = UIColor(red: 200/255, green: 200/255, blue: 200/255, alpha: 0.8)
                     self.labelBG.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.3)
             })
