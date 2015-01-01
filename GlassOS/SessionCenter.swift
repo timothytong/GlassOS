@@ -11,9 +11,10 @@ enum functionMode{
     case functionModeTranslation
     case functionModeCamera
     case functionModeEmail
-    case function
+    case functionModeSettings
 }
 class SessionCenter: NSObject {
+    private var userFullControl = false //Will be used to determine if the user is allowed to perform Myo gestures
     var activeMode: functionMode?
 
     class var sharedInstance: SessionCenter{
@@ -29,5 +30,13 @@ class SessionCenter: NSObject {
     
     func updateActiveMode(newMode: functionMode!){
         activeMode = newMode
+    }
+    
+    func enableFullControl(){
+        userFullControl = true
+    }
+    
+    func disableFullControl(){
+        userFullControl = false
     }
 }

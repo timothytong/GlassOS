@@ -38,7 +38,7 @@ class RootController: UIViewController {
         disableView = UIView(frame: view.frame)
         disableView.backgroundColor = UIColor.clearColor()
         disableView.alpha = 0
-        disableView.userInteractionEnabled = false
+//        disableView.userInteractionEnabled = false
         view.addSubview(disableView)
         promptBoxQueue = Array<PromptBox>()
         notificationBox = NotificationBox(frame: CGRectMake(view.frame.width - 110, 10, 100, 60))
@@ -74,6 +74,7 @@ class RootController: UIViewController {
             UIView.animateWithDuration(0.4, delay: 0, options: UIViewAnimationOptions.CurveEaseOut, animations: { () -> Void in
                 self.disableView.alpha = 0.5
                 }) { (complete) -> Void in
+                    SessionCenter.sharedInstance.disableFullControl()
             }
         }
         else{
@@ -82,6 +83,18 @@ class RootController: UIViewController {
     }
     
     func dismissCurrentPromptWindow(){
+        UIView.animateWithDuration(0.3, delay: 0, options: UIViewAnimationOptions.CurveEaseIn, animations: { () -> Void in
+            self.disableView.alpha = 0
+        }) { (complete) -> Void in
+            SessionCenter.sharedInstance.enableFullControl()
+            self.promptBoxIsCurrentlyVisible = false
+            self.curActivePromptWindow!.removeFromSuperview()
+            println("Array count: \(self.promptBoxQueue.count)")
+            if self.promptBoxQueue.count != 0{
+                self.curActivePromptWindow = self.promptBoxQueue.removeAtIndex(0)
+                self.disablePageAndShowDialog(self.curActivePromptWindow!)
+            }
 
+        }
     }
 }

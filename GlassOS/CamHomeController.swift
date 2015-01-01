@@ -9,7 +9,7 @@
 import UIKit
 import AVFoundation
 
-class CamHomeController: UIViewController, CursorDelegate {
+class CamHomeController: UIViewController, CursorDelegate, PromptBoxDelegate {
     private var captureSession:AVCaptureSession!
     private var captureDevice:AVCaptureDevice?
     private var mainMenu: Menu!
@@ -175,9 +175,19 @@ class CamHomeController: UIViewController, CursorDelegate {
         
     }
     func showTestPromptWindow(){
-        var strings = ["Yes","No","Cancel"]
-        var promptBox = PromptBox(screenSize: CGSizeMake(view.frame.width, view.frame.height), title: "Notice", msg: "This is a test message", buttons: strings)
+//        var strings = ["Yes","No","Cancel"]
+//        var promptBox = PromptBox(screenSize: CGSizeMake(view.frame.width, view.frame.height), title: "Notice", msg: "This is a test message", buttons: strings)
+//        promptBox.delegate = self
         let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
-        appDelegate.disablePageAndShowDialog(promptBox)
+        appDelegate.disablePageAndDisplayNotice("Notice", msg: "Some random error")
+                appDelegate.disablePageAndDisplayNotice("Notice2", msg: "Some random error 2")
+                appDelegate.disablePageAndDisplayNotice("Notice3", msg: "Some random error 3")
+//        appDelegate.disablePageAndShowDialog(promptBox)
+    }
+    func PromptBoxButtonClicked(button: String) {
+        if button == "Yes"{
+            let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
+            appDelegate.dismissActivePromptWindow()
+        }
     }
 }
