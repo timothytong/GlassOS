@@ -72,7 +72,7 @@ class RootController: UIViewController {
             disableView.addSubview(curActivePromptWindow!)
             disableView.bringSubviewToFront(curActivePromptWindow!)
             UIView.animateWithDuration(0.4, delay: 0, options: UIViewAnimationOptions.CurveEaseOut, animations: { () -> Void in
-                self.disableView.alpha = 0.5
+                self.disableView.alpha = 0.75
                 }) { (complete) -> Void in
                     SessionCenter.sharedInstance.disableFullControl()
             }
