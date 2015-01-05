@@ -27,8 +27,6 @@
 		3398CB8F1A47ED39002E8B89 /* settings_sel.png in Resources */ = {isa = PBXBuildFile; fileRef = 3398CB8D1A47ED39002E8B89 /* settings_sel.png */; };
 		3398CB901A47ED39002E8B89 /* settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 3398CB8E1A47ED39002E8B89 /* settings.png */; };
 		33AE1C111A49CDA300C1A723 /* Cursor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33AE1C101A49CDA300C1A723 /* Cursor.swift */; };
-		33BE1A161A58AFB20033C64A /* GPUImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33BE1A151A58AFB20033C64A /* GPUImage.framework */; };
-		33BE1A181A58B0470033C64A /* GPUImage.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 33BE1A151A58AFB20033C64A /* GPUImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		33DAB8431A452360007F6A02 /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DAB8421A452360007F6A02 /* Menu.swift */; };
 		33FCAEF91A3B5B9A007FBFF2 /* NotificationBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FCAEF81A3B5B9A007FBFF2 /* NotificationBox.swift */; };
 		C678D4C7F18DCB80EB93598B /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 746017FE711EFBFBB66A6252 /* libPods.a */; };
@@ -43,19 +41,6 @@
 			remoteInfo = GlassOS;
 		};
 /* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		33BE1A171A58B02E0033C64A /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				33BE1A181A58B0470033C64A /* GPUImage.framework in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		330C6FE01A52EEBB0030ADA2 /* PromptBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PromptBox.swift; sourceTree = "<group>"; };
@@ -96,7 +81,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				33BE1A161A58AFB20033C64A /* GPUImage.framework in Frameworks */,
 				C678D4C7F18DCB80EB93598B /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -232,7 +216,6 @@
 				334FA44F1A3B56480065A87D /* Frameworks */,
 				334FA4501A3B56480065A87D /* Resources */,
 				448B509B8036C0B699098D02 /* Copy Pods Resources */,
-				33BE1A171A58B02E0033C64A /* CopyFiles */,
 			);
 			buildRules = (
 			);
