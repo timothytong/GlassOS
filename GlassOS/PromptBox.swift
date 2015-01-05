@@ -8,7 +8,7 @@
 
 import UIKit
 @objc protocol PromptBoxDelegate{
-    func PromptBoxButtonClicked(button:String)
+    func promptBoxButtonClicked(button:String, boxName name:String!)
 }
 /*
 In general - Create a prompbox object then send it to the app delegate.
@@ -22,13 +22,15 @@ class PromptBox: UIView {
     private var numButtons = 0
     //    private var buttons: Array<UIView>?
     private var buttonLabels: Array<UILabel>?
+    var name: String!
     var curActiveOpt = 0
     var delegate: PromptBoxDelegate?
     required init(coder: NSCoder) {
         fatalError("NSCoding not supported")
     }
-    init(screenSize: CGSize, title: String!, msg: String!, buttons: Array<String>?){
+    init(screenSize: CGSize, title: String!, msg: String!, buttons: Array<String>?, name:String!){
         super.init(frame: CGRectMake(screenSize.width / 2 - 150, screenSize.height / 2 - 100, 300, 200))
+        self.name = name
         if let btnAry = buttons{
             numButtons = btnAry.count
         }
@@ -91,7 +93,7 @@ class PromptBox: UIView {
     func buttonClicked(sender: UITapGestureRecognizer){
         println("button clicked")
         var num = sender.view!.tag
-        self.delegate?.PromptBoxButtonClicked(buttonLabels![num].text!)
+        self.delegate?.promptBoxButtonClicked(buttonLabels![num].text!, boxName: self.name)
     }
     func nextOption(){
         if curActiveOpt < numButtons - 1{

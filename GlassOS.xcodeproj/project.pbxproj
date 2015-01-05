@@ -84,6 +84,7 @@
 		3398CB8E1A47ED39002E8B89 /* settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = settings.png; path = Images/settings.png; sourceTree = "<group>"; };
 		33AE1C101A49CDA300C1A723 /* Cursor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cursor.swift; sourceTree = "<group>"; };
 		33BE1A151A58AFB20033C64A /* GPUImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GPUImage.framework; path = "../../../Library/Developer/Xcode/DerivedData/GlassOS-ewyfxjjmxwdyykbdedqakntkrcde/Build/Products/Debug-iphoneos/GPUImage.framework"; sourceTree = "<group>"; };
+		33BE1A191A5A17190033C64A /* iLearn-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iLearn-Bridging-Header.h"; sourceTree = "<group>"; };
 		33DAB8421A452360007F6A02 /* Menu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
 		33FCAEF81A3B5B9A007FBFF2 /* NotificationBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationBox.swift; sourceTree = "<group>"; };
 		746017FE711EFBFBB66A6252 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -139,6 +140,7 @@
 				334FA4771A3B567F0065A87D /* RootController.swift */,
 				334FA4791A3B567F0065A87D /* MainController.swift */,
 				334FA4571A3B56480065A87D /* AppDelegate.swift */,
+				33BE1A191A5A17190033C64A /* iLearn-Bridging-Header.h */,
 				334FA45E1A3B56480065A87D /* Images.xcassets */,
 				334FA4601A3B56480065A87D /* LaunchScreen.xib */,
 				334FA4551A3B56480065A87D /* Supporting Files */,

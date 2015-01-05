@@ -10,7 +10,7 @@ import UIKit
 import AVFoundation
 import GPUImage
 
-class CamHomeController: UIViewController, CursorDelegate, PromptBoxDelegate {
+class CamHomeController: UIViewController, CursorDelegate{
     private var captureSession:AVCaptureSession!
     private var captureDevice:AVCaptureDevice?
     private var mainMenu: Menu!
@@ -27,6 +27,7 @@ class CamHomeController: UIViewController, CursorDelegate, PromptBoxDelegate {
     
     let screenWidth = UIScreen.mainScreen().bounds.size.width
     let screenHeight = UIScreen.mainScreen().bounds.size.height
+    let screenSize = UIScreen.mainScreen().bounds.size
     override func viewDidLoad() {
         super.viewDidLoad()
         println("CamView did load")
@@ -61,6 +62,8 @@ class CamHomeController: UIViewController, CursorDelegate, PromptBoxDelegate {
                 self.selRect.layer.borderColor = UIColor.whiteColor().CGColor
                 self.selRect.layer.borderWidth = 1
                 self.selRect.clipsToBounds = false
+                var selRectTap = UITapGestureRecognizer(target: self, action: "openSelRectPrompt")
+                self.selRect.addGestureRecognizer(selRectTap)
             })
             
             
@@ -102,43 +105,50 @@ class CamHomeController: UIViewController, CursorDelegate, PromptBoxDelegate {
         
     }
     
+    // MARK: Selection Box
     func drag(sender: UIPanGestureRecognizer){
-        dispatch_async(dispatch_get_main_queue(), { () -> Void in
-            self.view.bringSubviewToFront(sender.view!)
-            var translationPoint = sender.translationInView(self.view)
-            if sender.state == UIGestureRecognizerState.Began{
-                self.startingPoint = self.cursor.frame.origin
-                self.cursor.startDragging(self.startingPoint)
-                self.activeUIElements.updateValue(self.selRect, forKey: "selRect")
+        //        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+        //            self.view.bringSubviewToFront(sender.view!)
+        var translationPoint = sender.translationInView(self.view)
+        if sender.state == .Began{
+            self.startingPoint = self.cursor.frame.origin
+            self.cursor.startDragging(self.startingPoint)
+            self.activeUIElements.updateValue(self.selRect, forKey: "selRect")
+        }
+        //check if current point is still in bounds
+        if (self.cursor.frame.origin.x + 6 >= 0 && self.cursor.frame.origin.x + 6 <= self.view.frame.width) && (self.cursor.frame.origin.y + 6 >= 0 && self.cursor.frame.origin.y + 6 <= self.view.frame.height){
+            self.cursor.moveWithTranslationPoint(translationPoint)
+        }
+        else{
+            // Adjustments..
+            var x: CGFloat = 0, y: CGFloat = 0
+            if self.cursor.frame.origin.x < -6{
+                x = -5
             }
-            //check if current point is still in bounds
-            if (self.cursor.frame.origin.x + 6 >= 0 && self.cursor.frame.origin.x + 6 <= self.view.frame.width) && (self.cursor.frame.origin.y + 6 >= 0 && self.cursor.frame.origin.y + 6 <= self.view.frame.height){
-                self.cursor.moveWithTranslationPoint(translationPoint)
+            else if self.cursor.frame.origin.x + 6 > self.view.frame.width{
+                x = self.view.frame.width - 7
             }
-            else{
-                // Adjustments..
-                var x: CGFloat = 0, y: CGFloat = 0
-                if self.cursor.frame.origin.x < -6{
-                    x = -5
-                }
-                else if self.cursor.frame.origin.x + 6 > self.view.frame.width{
-                    x = self.view.frame.width - 7
-                }
-                if self.cursor.frame.origin.y < -6{
-                    y = -5
-                }
-                else if self.cursor.frame.origin.y + 6 > self.view.frame.height{
-                    y = self.view.frame.height - 7
-                }
-                self.cursor.frame.origin = CGPointMake(x, y)
+            if self.cursor.frame.origin.y < -6{
+                y = -5
             }
-//            if sender.state == UIGestureRecognizerState.Ended{
-//                
-//            }
-            if sender.state == UIGestureRecognizerState.Cancelled{
-                self.cursor.endDragging()
+            else if self.cursor.frame.origin.y + 6 > self.view.frame.height{
+                y = self.view.frame.height - 7
             }
-        })
+            self.cursor.frame.origin = CGPointMake(x, y)
+        }
+        //            if sender.state == .Changed{
+        //
+        //            }
+        if sender.state == .Cancelled{
+            println("sender state - cancelled")
+            self.cursor.endDragging()
+        }
+        if sender.state == .Ended{
+            println("ended")
+            self.canTapSelRect = true
+            println("canTapSelRect set to true")
+        }
+        //        })
     }
     
     func finishedSelection(){
@@ -168,17 +178,17 @@ class CamHomeController: UIViewController, CursorDelegate, PromptBoxDelegate {
         selRect.alpha = 1
     }
     
-    
-    
-    func PromptBoxButtonClicked(button: String) {
-        if button == "Yes"{
-            let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
-            appDelegate.dismissActivePromptWindow()
+    func openSelRectPrompt(){
+        if self.canTapSelRect{
+            println("selRect Tapped")
+            self.canTapSelRect = false
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                var translationPrompt = PromptBox(screenSize: self.screenSize, title: "Translation.", msg: "Translate this selection?", buttons: ["Yes", "No"], name: "selrect")
+                var appDel = UIApplication.sharedApplication().delegate as AppDelegate
+                appDel.disablePageAndShowDialog(translationPrompt)
+            })
         }
     }
-    
-    
-    
     
     // MARK: Camera
     func beginSession(){
@@ -219,7 +229,7 @@ class CamHomeController: UIViewController, CursorDelegate, PromptBoxDelegate {
         })
     }
     
-    func capture(){
+    func capture(completion: (UIImage?)->Void){
         dispatch_async(self.sessionQueue, { () -> Void in
             // Update orientation on the image output connection before capturing
             self.imageOutput!.connectionWithMediaType(AVMediaTypeVideo).videoOrientation = self.previewLayer!.connection.videoOrientation
@@ -233,11 +243,36 @@ class CamHomeController: UIViewController, CursorDelegate, PromptBoxDelegate {
                     if ((imageDataSampleBuffer) != nil){
                         var imageData:NSData = AVCaptureStillImageOutput.jpegStillImageNSDataRepresentation(imageDataSampleBuffer)
                         var image = UIImage(data: imageData)
-                        
+                        completion(image)
                     }
                 })
             }
         })
+    }
+    
+    func captureSelectionArea(){
+        capture { (capturedImg) -> Void in
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                autoreleasepool { () -> () in
+                    var image:UIImage = capturedImg!
+                    var cropPath = UIBezierPath(roundedRect: CGRectMake(0, 0, self.selRect.frame.width, self.selRect.frame.height), cornerRadius: 0)
+                    var mask = CAShapeLayer()
+                    mask.frame = CGRectMake(self.selRect.frame.origin.x, self.selRect.frame.origin.y
+                        , self.selRect.frame.width, self.selRect.frame.height)
+                    mask.path = cropPath.CGPath
+                    var imageView = UIImageView(frame: CGRectMake(0, 0, self.screenWidth, self.screenHeight))
+                    imageView.image = image
+                    imageView.layer.mask = mask
+                    imageView.alpha = 0
+                    self.view.addSubview(imageView)
+                    UIView.animateWithDuration(0.35, delay: 0, options: .CurveEaseIn, animations: { () -> Void in
+                        imageView.alpha = 1
+                        }, completion: { (complete) -> Void in
+                    })
+                    
+                }
+            })
+        }
     }
     
     //    class func setFlashMode(flashMode: AVCaptureFlashMode, forDevice device:AVCaptureDevice){

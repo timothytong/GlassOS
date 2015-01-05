@@ -97,4 +97,18 @@ class RootController: UIViewController {
 
         }
     }
+    
+    func addObservers(){
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "handle:", name: SVProgressHUDWillAppearNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "handle:", name: SVProgressHUDDidAppearNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "handle:", name: SVProgressHUDWillDisappearNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "handle:", name: SVProgressHUDDidDisappearNotification, object: nil)
+        
+        SVProgressHUD.setFont(UIFont(name: "HelveticaNeue-Thin", size: 20))
+    }
+    
+    func handle(notif:NSNotification){
+        //        NSLog("Notification recieved: \(notif.name)");
+        //        NSLog("Status user info key: \(notif.userInfo?[SVProgressHUDStatusUserInfoKey])")
+    }
 }

@@ -34,18 +34,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PromptBoxDelegate {
     }
     
     func disablePageAndShowDialog(dialogWindow: PromptBox){
+        dialogWindow.delegate = self
         rootController?.disablePageAndShowDialog(dialogWindow)
     }
     
     func disablePageAndDisplayNotice(title: String, msg: String){
-        var noticeWindow = PromptBox(screenSize: window!.frame.size, title: title, msg: msg, buttons: ["OK"])
+        var noticeWindow = PromptBox(screenSize: window!.frame.size, title: title, msg: msg, buttons: ["OK"],name:"notice")
         noticeWindow.delegate = self
         rootController?.disablePageAndShowDialog(noticeWindow)
     }
-    func PromptBoxButtonClicked(button: String) {
-        if button == "OK"{
-            rootController?.dismissCurrentPromptWindow()
+    func promptBoxButtonClicked(button: String, boxName name:String!) {
+        println("\(name) prompbox tapped, button of interest: \"\(button)\"")
+        switch name{
+        case "selrect":
+            if button == "Yes"{
+                self.camController!.captureSelectionArea()
+            }
+        default:
+            break;
         }
+        
+        if name == "notice"{
+            if button == "OK"{
+                rootController?.dismissCurrentPromptWindow()
+            }
+        }
+        
     }
     func dismissActivePromptWindow(){
         rootController?.dismissCurrentPromptWindow()
