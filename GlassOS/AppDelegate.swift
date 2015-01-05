@@ -48,6 +48,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PromptBoxDelegate {
         switch name{
         case "selrect":
             if button == "Yes"{
+                self.rootController!.dismissCurrentPromptWindow()
                 self.camController!.captureSelectionArea()
             }
         default:

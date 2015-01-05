@@ -53,10 +53,8 @@ class CamHomeController: UIViewController, CursorDelegate, TesseractDelegate{
             self.mainMenuArray = [helpDict, emailDict, camDict, settingsDict]
             
             // Tesseract OCR
-            self.tesseract = Tesseract()
+            self.tesseract = Tesseract(language: "eng")
             self.tesseract.delegate = self
-            self.tesseract.language = "eng"
-            
             
             // Dialog box
             //        var timer = NSTimer.scheduledTimerWithTimeInterval(4, target: self, selector: "showTestPromptWindow", userInfo: nil, repeats: false)
@@ -263,36 +261,55 @@ class CamHomeController: UIViewController, CursorDelegate, TesseractDelegate{
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
                 autoreleasepool { () -> () in
                     var image:UIImage = capturedImg!
-                    var cropPath = UIBezierPath(roundedRect: CGRectMake(0, 0, self.selRect.frame.width, self.selRect.frame.height), cornerRadius: 0)
-                    var mask = CAShapeLayer()
-                    mask.frame = CGRectMake(self.selRect.frame.origin.x, self.selRect.frame.origin.y
-                        , self.selRect.frame.width, self.selRect.frame.height)
-                    mask.path = cropPath.CGPath
-                    var imageView = UIImageView(frame: CGRectMake(0, 0, self.screenWidth, self.screenHeight))
-                    imageView.image = image
-                    imageView.layer.mask = mask
+                    var gpuImg = GPUImagePicture(image: image)
+                    //                    var cropPath = UIBezierPath(roundedRect: CGRectMake(0, 0, self.selRect.frame.width, self.selRect.frame.height), cornerRadius: 0)
+                    //                    var mask = CAShapeLayer()
+                    //                    mask.frame = CGRectMake(self.selRect.frame.origin.x, self.selRect.frame.origin.y
+                    //                        , self.selRect.frame.width, self.selRect.frame.height)
+                    //                    mask.path = cropPath.CGPath
+                    //                    var imageView = UIImageView(frame: CGRectMake(0, 0, self.screenWidth, self.screenHeight))
+                    //                    println("CropRect: (\(self.selRect.frame.origin.x),\(self.selRect.frame.origin.y),\(self.selRect.frame.width),\(self.selRect.frame.height))")
+                    var cropRect = CGRectMake(self.selRect.frame.origin.x/self.screenWidth, self.selRect.frame.origin.y/self.screenHeight, self.selRect.frame.width/self.screenWidth, self.selRect.frame.height/self.screenHeight)
+                    var cropFilter = GPUImageCropFilter(cropRegion: cropRect)
+                    //                    gpuImg.addTarget(cropFilter)
+                    //                    cropFilter.useNextFrameForImageCapture()
+                    //                    gpuImg.processImage()
+                    var croppedImg = cropFilter.imageByFilteringImage(image)
+                    var imageView = UIImageView(frame: self.selRect.frame)
+                    imageView.image = croppedImg
+                    //                    imageView.layer.mask = mask
                     imageView.alpha = 0
                     self.view.addSubview(imageView)
                     UIView.animateWithDuration(0.35, delay: 0, options: .CurveEaseIn, animations: { () -> Void in
                         imageView.alpha = 1
                         }, completion: { (complete) -> Void in
+                            var grayScaleFilter = GPUImageGrayscaleFilter()
+                            var bw_img = grayScaleFilter.imageByFilteringImage(croppedImg)
+                            dispatch_async(self.sessionQueue, { () -> Void in
+                                println("Recognizing.")
+                                self.tesseract.image = bw_img.blackAndWhite()
+                                if self.tesseract.recognize(){
+                                    println("RECOGNIZED: \(self.tesseract.recognizedText)")
+                                }else{
+                                    println("Cannot recognize text.")
+                                }
+                            })
                             UIView.animateWithDuration(0.35, delay: 1, options: .CurveEaseIn, animations: { () -> Void in
                                 imageView.alpha = 0
-                            }, completion: { (complete) -> Void in
-                                imageView.removeFromSuperview()
-                                dispatch_async(self.sessionQueue, { () -> Void in
-                                    image = image.blackAndWhite()
-                                    imageView.image = image
+                                }, completion: { (complete) -> Void in
+                                    imageView.removeFromSuperview()
+                                    imageView.image = bw_img
                                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
                                         imageView.alpha = 0
                                         self.view.addSubview(imageView)
+                                        
                                         UIView.animateWithDuration(0.35, delay: 0, options: .CurveEaseIn, animations: { () -> Void in
                                             imageView.alpha = 1
-                                        }, completion: { (complete) -> Void in
-                                            
+                                            }, completion: { (complete) -> Void in
+                                                
                                         })
                                     })
-                                })
+                                    
                             })
                     })
                     
@@ -360,5 +377,12 @@ class CamHomeController: UIViewController, CursorDelegate, TesseractDelegate{
         focusWithMode(.ContinuousAutoFocus, exposeWithMode: .ContinuousAutoExposure, atDevicePoint: point, monitorSubjectAreaChange: true)
         }
         */
+    }
+    
+    func progressImageRecognitionForTesseract(tesseract:Tesseract) {
+        println("progress: \(tesseract.progress)")
+    }
+    func shouldCancelImageRecognitionForTesseract(tesseract: Tesseract!) -> Bool {
+        return false
     }
 }
