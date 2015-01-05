@@ -21,10 +21,11 @@ class CamHomeController: UIViewController, CursorDelegate, TesseractDelegate{
     private var selRect: UIView!
     private var startingPoint = CGPointMake(0, 0)
     private var activeUIElements = Dictionary<String, UIView>()
-    private var previewLayer:AVCaptureVideoPreviewLayer?
-    private var imageOutput:AVCaptureStillImageOutput?
-    private var sessionQueue:dispatch_queue_t!
-    private var tesseract:Tesseract!
+    private var previewLayer: AVCaptureVideoPreviewLayer?
+    private var imageOutput: AVCaptureStillImageOutput?
+    private var sessionQueue: dispatch_queue_t!
+    private var tesseract: Tesseract!
+    private var ocrResultWindow: UIView!
     
     let screenWidth = UIScreen.mainScreen().bounds.size.width
     let screenHeight = UIScreen.mainScreen().bounds.size.height
@@ -70,6 +71,7 @@ class CamHomeController: UIViewController, CursorDelegate, TesseractDelegate{
                 self.selRect.clipsToBounds = false
                 var selRectTap = UITapGestureRecognizer(target: self, action: "openSelRectPrompt")
                 self.selRect.addGestureRecognizer(selRectTap)
+                self.ocrResultWindow = UIView(frame: CGRectMake(0, 0, 0, 0))
             })
             
             self.captureSession = AVCaptureSession()
@@ -260,6 +262,7 @@ class CamHomeController: UIViewController, CursorDelegate, TesseractDelegate{
         capture { (capturedImg) -> Void in
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
                 autoreleasepool { () -> () in
+                    self.cursor.endDragging()
                     var image:UIImage = capturedImg!
                     var gpuImg = GPUImagePicture(image: image)
                     //                    var cropPath = UIBezierPath(roundedRect: CGRectMake(0, 0, self.selRect.frame.width, self.selRect.frame.height), cornerRadius: 0)
@@ -281,7 +284,7 @@ class CamHomeController: UIViewController, CursorDelegate, TesseractDelegate{
                     imageView.alpha = 0
                     self.view.addSubview(imageView)
                     UIView.animateWithDuration(0.35, delay: 0, options: .CurveEaseIn, animations: { () -> Void in
-                        imageView.alpha = 1
+                        imageView.alpha = 0.7
                         }, completion: { (complete) -> Void in
                             var grayScaleFilter = GPUImageGrayscaleFilter()
                             var bw_img = grayScaleFilter.imageByFilteringImage(croppedImg)
@@ -289,7 +292,31 @@ class CamHomeController: UIViewController, CursorDelegate, TesseractDelegate{
                                 println("Recognizing.")
                                 self.tesseract.image = bw_img.blackAndWhite()
                                 if self.tesseract.recognize(){
-                                    println("RECOGNIZED: \(self.tesseract.recognizedText)")
+                                    var recText = self.tesseract.recognizedText
+                                    if recText == ""{
+                                        recText = "Error."
+                                    }
+                                    println("RECOGNIZED: \(recText)")
+                                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                                        var height = imageView.frame.height
+                                        var width = imageView.frame.width
+                                        if height < 30{
+                                            height = 30
+                                        }
+                                        if width < 60{
+                                            width = 60
+                                        }
+                                        self.ocrResultWindow = UIView(frame:CGRectMake(imageView.frame.origin.x, imageView.frame.origin.y, width, height))
+                                        self.ocrResultWindow.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.7)
+                                        self.ocrResultWindow.alpha = 0
+                                        var txtLabel = UILabel(frame: CGRectMake(0, 0, width, height))
+                                        txtLabel.text = recText
+                                        var fontSize:CGFloat = 20 + height * 0.5
+                                        txtLabel.font = UIFont(name: "HelveticaNeue-Thin", size: fontSize)
+                                        txtLabel.textAlignment = .Center
+                                        self.ocrResultWindow.addSubview(txtLabel)
+                                        self.view.addSubview(self.ocrResultWindow)
+                                    })
                                 }else{
                                     println("Cannot recognize text.")
                                 }
@@ -302,10 +329,18 @@ class CamHomeController: UIViewController, CursorDelegate, TesseractDelegate{
                                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
                                         imageView.alpha = 0
                                         self.view.addSubview(imageView)
-                                        
                                         UIView.animateWithDuration(0.35, delay: 0, options: .CurveEaseIn, animations: { () -> Void in
-                                            imageView.alpha = 1
+                                            imageView.alpha = 0.7
                                             }, completion: { (complete) -> Void in
+                                                UIView.animateWithDuration(0.35, delay: 1, options: .CurveEaseIn, animations: { () -> Void in
+                                                    imageView.alpha = 0
+                                                    }, completion: { (complete) -> Void in
+                                                        UIView.animateWithDuration(0.35, delay: 0, options: .CurveEaseIn, animations: { () -> Void in
+                                                            self.ocrResultWindow.alpha = 0.7
+                                                            }, completion: { (complete) -> Void in
+                                                                
+                                                        })
+                                                })
                                                 
                                         })
                                     })
