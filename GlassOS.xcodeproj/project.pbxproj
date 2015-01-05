@@ -28,8 +28,9 @@
 		3398CB901A47ED39002E8B89 /* settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 3398CB8E1A47ED39002E8B89 /* settings.png */; };
 		33AE1C111A49CDA300C1A723 /* Cursor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33AE1C101A49CDA300C1A723 /* Cursor.swift */; };
 		33DAB8431A452360007F6A02 /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DAB8421A452360007F6A02 /* Menu.swift */; };
+		33F8D83D1A5A4F7D00D3C755 /* tessdata in Resources */ = {isa = PBXBuildFile; fileRef = 33F8D83C1A5A4F7D00D3C755 /* tessdata */; };
 		33FCAEF91A3B5B9A007FBFF2 /* NotificationBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FCAEF81A3B5B9A007FBFF2 /* NotificationBox.swift */; };
-		C678D4C7F18DCB80EB93598B /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 746017FE711EFBFBB66A6252 /* libPods.a */; };
+		7CCF82D0C6B4CF0A062EEC50 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 746017FE711EFBFBB66A6252 /* libPods.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,10 +68,12 @@
 		3398CB8A1A47ED20002E8B89 /* cam.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = cam.png; path = Images/cam.png; sourceTree = "<group>"; };
 		3398CB8D1A47ED39002E8B89 /* settings_sel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = settings_sel.png; path = Images/settings_sel.png; sourceTree = "<group>"; };
 		3398CB8E1A47ED39002E8B89 /* settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = settings.png; path = Images/settings.png; sourceTree = "<group>"; };
+		33ACFD841A5A3617008B0A14 /* libPods-TesseractOCRiOS.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libPods-TesseractOCRiOS.a"; path = "Pods/build/Debug-iphoneos/libPods-TesseractOCRiOS.a"; sourceTree = "<group>"; };
 		33AE1C101A49CDA300C1A723 /* Cursor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cursor.swift; sourceTree = "<group>"; };
 		33BE1A151A58AFB20033C64A /* GPUImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GPUImage.framework; path = "../../../Library/Developer/Xcode/DerivedData/GlassOS-ewyfxjjmxwdyykbdedqakntkrcde/Build/Products/Debug-iphoneos/GPUImage.framework"; sourceTree = "<group>"; };
-		33BE1A191A5A17190033C64A /* iLearn-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iLearn-Bridging-Header.h"; sourceTree = "<group>"; };
 		33DAB8421A452360007F6A02 /* Menu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
+		33F8D8281A5A38CC00D3C755 /* GlassOS-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "GlassOS-Bridging-Header.h"; path = "GlassOS/GlassOS-Bridging-Header.h"; sourceTree = "<group>"; };
+		33F8D83C1A5A4F7D00D3C755 /* tessdata */ = {isa = PBXFileReference; lastKnownFileType = folder; path = tessdata; sourceTree = "<group>"; };
 		33FCAEF81A3B5B9A007FBFF2 /* NotificationBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationBox.swift; sourceTree = "<group>"; };
 		746017FE711EFBFBB66A6252 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		BABBEFADDA0B0426AC6496C4 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
@@ -81,7 +84,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C678D4C7F18DCB80EB93598B /* libPods.a in Frameworks */,
+				7CCF82D0C6B4CF0A062EEC50 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -98,6 +101,7 @@
 		334FA4491A3B56480065A87D = {
 			isa = PBXGroup;
 			children = (
+				33F8D8281A5A38CC00D3C755 /* GlassOS-Bridging-Header.h */,
 				334FA4541A3B56480065A87D /* GlassOS */,
 				334FA46A1A3B56480065A87D /* GlassOSTests */,
 				334FA4531A3B56480065A87D /* Products */,
@@ -124,7 +128,6 @@
 				334FA4771A3B567F0065A87D /* RootController.swift */,
 				334FA4791A3B567F0065A87D /* MainController.swift */,
 				334FA4571A3B56480065A87D /* AppDelegate.swift */,
-				33BE1A191A5A17190033C64A /* iLearn-Bridging-Header.h */,
 				334FA45E1A3B56480065A87D /* Images.xcassets */,
 				334FA4601A3B56480065A87D /* LaunchScreen.xib */,
 				334FA4551A3B56480065A87D /* Supporting Files */,
@@ -135,6 +138,7 @@
 		334FA4551A3B56480065A87D /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				33F8D83C1A5A4F7D00D3C755 /* tessdata */,
 				338EB09A1A45363C008CF15C /* Images */,
 				334FA4561A3B56480065A87D /* Info.plist */,
 			);
@@ -189,6 +193,7 @@
 		4B38BB2FF8368943A867C02E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				33ACFD841A5A3617008B0A14 /* libPods-TesseractOCRiOS.a */,
 				33BE1A151A58AFB20033C64A /* GPUImage.framework */,
 				746017FE711EFBFBB66A6252 /* libPods.a */,
 			);
@@ -289,6 +294,7 @@
 				3398CB8F1A47ED39002E8B89 /* settings_sel.png in Resources */,
 				334FA4621A3B56480065A87D /* LaunchScreen.xib in Resources */,
 				3398CB8B1A47ED20002E8B89 /* cam_sel.png in Resources */,
+				33F8D83D1A5A4F7D00D3C755 /* tessdata in Resources */,
 				334FA45F1A3B56480065A87D /* Images.xcassets in Resources */,
 				3398CB8C1A47ED20002E8B89 /* cam.png in Resources */,
 				3398CB881A47ECF5002E8B89 /* email.png in Resources */,
@@ -482,6 +488,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_INSTALL_OBJC_HEADER = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "GlassOS/GlassOS-Bridging-Header.h";
 			};
 			name = Debug;
 		};
@@ -498,6 +506,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_INSTALL_OBJC_HEADER = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "GlassOS/GlassOS-Bridging-Header.h";
 			};
 			name = Release;
 		};

@@ -4,11 +4,6 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>Pods-SVProgressHUD.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 		<key>Pods-TesseractOCRiOS.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -22,17 +17,12 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>0A6969FE9B7166475BF9FFCB</key>
+		<key>5A7E78391676D98677F52505</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>8C6C8D81E793EB62B099C88E</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>FA44062D8FD1A9FC4ACC8ABA</key>
+		<key>C323786592C603F4E417D263</key>
 		<dict>
 			<key>primary</key>
 			<true/>

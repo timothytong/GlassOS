@@ -10,7 +10,7 @@ import UIKit
 import AVFoundation
 import GPUImage
 
-class CamHomeController: UIViewController, CursorDelegate{
+class CamHomeController: UIViewController, CursorDelegate, TesseractDelegate{
     private var captureSession:AVCaptureSession!
     private var captureDevice:AVCaptureDevice?
     private var mainMenu: Menu!
@@ -24,6 +24,7 @@ class CamHomeController: UIViewController, CursorDelegate{
     private var previewLayer:AVCaptureVideoPreviewLayer?
     private var imageOutput:AVCaptureStillImageOutput?
     private var sessionQueue:dispatch_queue_t!
+    private var tesseract:Tesseract!
     
     let screenWidth = UIScreen.mainScreen().bounds.size.width
     let screenHeight = UIScreen.mainScreen().bounds.size.height
@@ -50,9 +51,16 @@ class CamHomeController: UIViewController, CursorDelegate{
             var sel_settingsImg = UIImage(named: "settings_sel.png")
             var settingsDict = NSDictionary(objects: NSArray(objects: settings!, sel_settingsImg!, "Settings"), forKeys: ["norm_img","sel_img","caption"])
             self.mainMenuArray = [helpDict, emailDict, camDict, settingsDict]
-            // Dialog box
             
+            // Tesseract OCR
+            self.tesseract = Tesseract()
+            self.tesseract.delegate = self
+            self.tesseract.language = "eng"
+            
+            
+            // Dialog box
             //        var timer = NSTimer.scheduledTimerWithTimeInterval(4, target: self, selector: "showTestPromptWindow", userInfo: nil, repeats: false)
+            
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
                 self.cursor = Cursor()
                 self.cursor.clipsToBounds = false
@@ -66,9 +74,9 @@ class CamHomeController: UIViewController, CursorDelegate{
                 self.selRect.addGestureRecognizer(selRectTap)
             })
             
-            
             self.captureSession = AVCaptureSession()
             self.captureSession.sessionPreset = AVCaptureSessionPresetHigh
+            
             let devices = AVCaptureDevice.devices()
             for device in devices {
                 if (device.hasMediaType(AVMediaTypeVideo)) {
@@ -78,7 +86,6 @@ class CamHomeController: UIViewController, CursorDelegate{
                     }
                 }
             }
-            
         })
     }
     
@@ -89,6 +96,7 @@ class CamHomeController: UIViewController, CursorDelegate{
         })
     }
     
+    // MARK: Cursor
     func showCursor(){
         if !cursorIsVisible{
             println("showing cursor")
@@ -268,6 +276,24 @@ class CamHomeController: UIViewController, CursorDelegate{
                     UIView.animateWithDuration(0.35, delay: 0, options: .CurveEaseIn, animations: { () -> Void in
                         imageView.alpha = 1
                         }, completion: { (complete) -> Void in
+                            UIView.animateWithDuration(0.35, delay: 1, options: .CurveEaseIn, animations: { () -> Void in
+                                imageView.alpha = 0
+                            }, completion: { (complete) -> Void in
+                                imageView.removeFromSuperview()
+                                dispatch_async(self.sessionQueue, { () -> Void in
+                                    image = image.blackAndWhite()
+                                    imageView.image = image
+                                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                                        imageView.alpha = 0
+                                        self.view.addSubview(imageView)
+                                        UIView.animateWithDuration(0.35, delay: 0, options: .CurveEaseIn, animations: { () -> Void in
+                                            imageView.alpha = 1
+                                        }, completion: { (complete) -> Void in
+                                            
+                                        })
+                                    })
+                                })
+                            })
                     })
                     
                 }
