@@ -7,3 +7,6 @@
 //
 
 #import <TesseractOCR/TesseractOCR.h>
+#import "AFHTTPRequestOperationManager.h"
+#import "AFHTTPSessionManager.h"
+#import "AFNetworkActivityIndicatorManager.h"

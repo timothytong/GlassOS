@@ -10,11 +10,15 @@ import UIKit
 import AVFoundation
 import GPUImage
 
+@objc protocol CamHomeControllerDelegate{
+    func CameraSessionDidBegin()
+    func setProgress(num: Float)
+}
+
 class CamHomeController: UIViewController, CursorDelegate, TesseractDelegate{
     private var captureSession:AVCaptureSession!
     private var captureDevice:AVCaptureDevice?
-    private var mainMenu: Menu!
-    private var mainMenuArray: Array<NSDictionary>!
+    
     private var cursor: Cursor!
     private var cursorIsVisible = false
     private var canTapSelRect = false
@@ -26,12 +30,16 @@ class CamHomeController: UIViewController, CursorDelegate, TesseractDelegate{
     private var sessionQueue: dispatch_queue_t!
     private var tesseract: Tesseract!
     private var ocrResultWindow: UIView!
+    private var mainMenu: Menu!
+    private var mainMenuArray: Array<NSDictionary>!
+    var delegate: CamHomeControllerDelegate?
     
     let screenWidth = UIScreen.mainScreen().bounds.size.width
     let screenHeight = UIScreen.mainScreen().bounds.size.height
     let screenSize = UIScreen.mainScreen().bounds.size
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.delegate?.setProgress(0.2)
         println("CamView did load")
         view.backgroundColor = UIColor.whiteColor()
         var sessionQueue = dispatch_queue_create("session queue", DISPATCH_QUEUE_SERIAL)
@@ -41,7 +49,7 @@ class CamHomeController: UIViewController, CursorDelegate, TesseractDelegate{
             // Can add youtube, music, safari etc...
             var helpImg = UIImage(named: "help.png")
             var sel_helpImg = UIImage(named: "help_sel.png")
-            var helpDict = NSDictionary(objects: NSArray(objects: helpImg!, sel_helpImg!, "Translation"), forKeys: ["norm_img","sel_img","caption"])
+            var helpDict = NSDictionary(objects: NSArray(objects: helpImg!, sel_helpImg!, "Dictionary"), forKeys: ["norm_img","sel_img","caption"])
             var emailImg = UIImage(named: "email.png")
             var sel_emailImg = UIImage(named: "email_sel.png")
             var emailDict = NSDictionary(objects: NSArray(objects: emailImg!, sel_emailImg!, "Email"), forKeys: ["norm_img","sel_img","caption"])
@@ -53,10 +61,10 @@ class CamHomeController: UIViewController, CursorDelegate, TesseractDelegate{
             var settingsDict = NSDictionary(objects: NSArray(objects: settings!, sel_settingsImg!, "Settings"), forKeys: ["norm_img","sel_img","caption"])
             self.mainMenuArray = [helpDict, emailDict, camDict, settingsDict]
             
-            // Tesseract OCR
-            self.tesseract = Tesseract(language: "eng")
-            self.tesseract.delegate = self
             
+            // Tesseract OCR
+            self.tesseract = Tesseract(language: "chi_sim")
+            self.tesseract.delegate = self
             // Dialog box
             //        var timer = NSTimer.scheduledTimerWithTimeInterval(4, target: self, selector: "showTestPromptWindow", userInfo: nil, repeats: false)
             
@@ -76,13 +84,14 @@ class CamHomeController: UIViewController, CursorDelegate, TesseractDelegate{
             
             self.captureSession = AVCaptureSession()
             self.captureSession.sessionPreset = AVCaptureSessionPresetHigh
-            
+            self.delegate?.setProgress(0.4)
             let devices = AVCaptureDevice.devices()
             for device in devices {
                 if (device.hasMediaType(AVMediaTypeVideo)) {
                     if(device.position == AVCaptureDevicePosition.Back) {
                         self.captureDevice = device as? AVCaptureDevice
                         self.beginSession()
+                        self.delegate?.setProgress(0.5)
                     }
                 }
             }
@@ -105,7 +114,6 @@ class CamHomeController: UIViewController, CursorDelegate, TesseractDelegate{
                 var panGesture = UIPanGestureRecognizer(target: self, action: "drag:")
                 panGesture.maximumNumberOfTouches = 1
                 self.view.addGestureRecognizer(panGesture)
-                
             })
             activeUIElements.updateValue(cursor, forKey: "cursor")
             cursorIsVisible = true
@@ -187,21 +195,24 @@ class CamHomeController: UIViewController, CursorDelegate, TesseractDelegate{
     }
     
     func openSelRectPrompt(){
-        if self.canTapSelRect{
-            println("selRect Tapped")
-            self.canTapSelRect = false
-            dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                var translationPrompt = PromptBox(screenSize: self.screenSize, title: "Translation.", msg: "Translate this selection?", buttons: ["Yes", "No"], name: "selrect")
-                var appDel = UIApplication.sharedApplication().delegate as AppDelegate
-                appDel.disablePageAndShowDialog(translationPrompt)
+        dispatch_async(self.sessionQueue, { () -> Void in
+            autoreleasepool({ () -> () in
+                if self.canTapSelRect{
+                    println("selRect Tapped")
+                    self.canTapSelRect = false
+                    var translationPrompt = PromptBox(screenSize: self.screenSize, title: "Dictionary.", msg: "Try to recognize this selection?", buttons: ["Yes", "No"], name: "selrect")
+                    var appDel = UIApplication.sharedApplication().delegate as AppDelegate
+                    appDel.disablePageAndShowDialog(translationPrompt)
+                }
             })
-        }
+        })
     }
     
     // MARK: Camera
     func beginSession(){
         println("Beginning session")
         dispatch_async(sessionQueue, { () -> Void in
+            self.delegate?.setProgress(0.7)
             var error : NSError? = nil
             self.captureSession.beginConfiguration()
             
@@ -232,8 +243,11 @@ class CamHomeController: UIViewController, CursorDelegate, TesseractDelegate{
                 self.captureSession.addOutput(imgOutput)
                 self.imageOutput = imgOutput
             }
+            self.delegate?.setProgress(1)
             self.captureSession.commitConfiguration()
             self.captureSession.startRunning()
+            self.delegate?.CameraSessionDidBegin()
+            
         })
     }
     
@@ -283,7 +297,7 @@ class CamHomeController: UIViewController, CursorDelegate, TesseractDelegate{
                     //                    imageView.layer.mask = mask
                     imageView.alpha = 0
                     self.view.addSubview(imageView)
-                    UIView.animateWithDuration(0.35, delay: 0, options: .CurveEaseIn, animations: { () -> Void in
+                    UIView.animateWithDuration(0.25, delay: 0, options: .CurveEaseIn, animations: { () -> Void in
                         imageView.alpha = 0.7
                         }, completion: { (complete) -> Void in
                             var grayScaleFilter = GPUImageGrayscaleFilter()
@@ -293,10 +307,13 @@ class CamHomeController: UIViewController, CursorDelegate, TesseractDelegate{
                                 self.tesseract.image = bw_img.blackAndWhite()
                                 if self.tesseract.recognize(){
                                     var recText = self.tesseract.recognizedText
+                                    var error = false
                                     if recText == ""{
                                         recText = "Error."
+                                        error = true
                                     }
                                     println("RECOGNIZED: \(recText)")
+                                    //                                    API.googleTranslate(recText)
                                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
                                         var height = imageView.frame.height
                                         var width = imageView.frame.width
@@ -306,22 +323,52 @@ class CamHomeController: UIViewController, CursorDelegate, TesseractDelegate{
                                         if width < 60{
                                             width = 60
                                         }
+                                        if (self.ocrResultWindow != nil){
+                                            self.ocrResultWindow.removeFromSuperview()
+                                            self.ocrResultWindow = nil
+                                        }
                                         self.ocrResultWindow = UIView(frame:CGRectMake(imageView.frame.origin.x, imageView.frame.origin.y, width, height))
-                                        self.ocrResultWindow.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.7)
+                                        self.ocrResultWindow.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.8)
                                         self.ocrResultWindow.alpha = 0
+                                        self.ocrResultWindow.clipsToBounds = true
                                         var txtLabel = UILabel(frame: CGRectMake(0, 0, width, height))
                                         txtLabel.text = recText
-                                        var fontSize:CGFloat = 20 + height * 0.5
+                                        var fontSize:CGFloat = 18 + height * 0.15
                                         txtLabel.font = UIFont(name: "HelveticaNeue-Thin", size: fontSize)
+                                        if fontSize > 25{
+                                            fontSize = 25
+                                        }
                                         txtLabel.textAlignment = .Center
                                         self.ocrResultWindow.addSubview(txtLabel)
                                         self.view.addSubview(self.ocrResultWindow)
+                                        if error{
+                                            UIView.animateWithDuration(0.3, delay: 1, options: .CurveEaseInOut, animations: { () -> Void in
+                                                self.ocrResultWindow.alpha = 0
+                                                }, completion: { (complete) -> Void in
+                                            })
+                                        }
+                                        else{
+                                            UIView.animateWithDuration(1, delay: 3.7, options: .CurveEaseInOut, animations: { () -> Void in
+                                                self.ocrResultWindow.transform = CGAffineTransformMakeTranslation(self.screenWidth - 5 - self.ocrResultWindow.frame.width - self.ocrResultWindow.frame.origin.x, 5 - self.ocrResultWindow.frame.origin.y)
+                                                }, completion: { (complete) -> Void in
+                                                    var translationLbl = UILabel(frame: CGRectMake(0, height, width, height))
+                                                    translationLbl.text = "Translation"
+                                                    translationLbl.textAlignment = .Center
+                                                    translationLbl.font = UIFont(name: "HelveticaNeue-Ultralight", size: fontSize)
+                                                    self.ocrResultWindow.addSubview(translationLbl)
+                                                    UIView.animateWithDuration(0.6, delay: 0, options: .CurveEaseInOut, animations: { () -> Void in
+                                                        self.ocrResultWindow.frame = CGRectMake(self.ocrResultWindow.frame.origin.x, self.ocrResultWindow.frame.origin.y, self.ocrResultWindow.frame.width, 2 * self.ocrResultWindow.frame.height)
+                                                        }, completion: { (complete) -> Void in
+                                                            
+                                                    })
+                                            })
+                                        }
                                     })
                                 }else{
                                     println("Cannot recognize text.")
                                 }
                             })
-                            UIView.animateWithDuration(0.35, delay: 1, options: .CurveEaseIn, animations: { () -> Void in
+                            UIView.animateWithDuration(0.25, delay: 1, options: .CurveEaseIn, animations: { () -> Void in
                                 imageView.alpha = 0
                                 }, completion: { (complete) -> Void in
                                     imageView.removeFromSuperview()
@@ -329,7 +376,7 @@ class CamHomeController: UIViewController, CursorDelegate, TesseractDelegate{
                                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
                                         imageView.alpha = 0
                                         self.view.addSubview(imageView)
-                                        UIView.animateWithDuration(0.35, delay: 0, options: .CurveEaseIn, animations: { () -> Void in
+                                        UIView.animateWithDuration(0.25, delay: 0, options: .CurveEaseIn, animations: { () -> Void in
                                             imageView.alpha = 0.7
                                             }, completion: { (complete) -> Void in
                                                 UIView.animateWithDuration(0.35, delay: 1, options: .CurveEaseIn, animations: { () -> Void in

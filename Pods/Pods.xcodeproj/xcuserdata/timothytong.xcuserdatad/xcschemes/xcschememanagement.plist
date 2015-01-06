@@ -4,6 +4,11 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>Pods-AFNetworking.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods-TesseractOCRiOS.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -17,12 +22,17 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>5A7E78391676D98677F52505</key>
+		<key>1ACFD8D8C0EC7430DF99881F</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>C323786592C603F4E417D263</key>
+		<key>3894B95C37FE73695774EAF2</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>D1F84FA974BC1F139503993C</key>
 		<dict>
 			<key>primary</key>
 			<true/>

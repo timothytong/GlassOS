@@ -30,7 +30,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PromptBoxDelegate {
     
     func transitionToCam(){
         camController = CamHomeController()
-        rootController?.transitionToPage(camController)
+        camController!.delegate = rootController
+        rootController?.transitionToCamController(camController)
     }
     
     func disablePageAndShowDialog(dialogWindow: PromptBox){
