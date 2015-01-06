@@ -32,6 +32,7 @@ class CamHomeController: UIViewController, CursorDelegate, TesseractDelegate{
     private var ocrResultWindow: UIView!
     private var mainMenu: Menu!
     private var mainMenuArray: Array<NSDictionary>!
+    private var translator: FGTranslator?
     var delegate: CamHomeControllerDelegate?
     
     let screenWidth = UIScreen.mainScreen().bounds.size.width
@@ -195,16 +196,14 @@ class CamHomeController: UIViewController, CursorDelegate, TesseractDelegate{
     }
     
     func openSelRectPrompt(){
-        dispatch_async(self.sessionQueue, { () -> Void in
-            autoreleasepool({ () -> () in
-                if self.canTapSelRect{
-                    println("selRect Tapped")
-                    self.canTapSelRect = false
-                    var translationPrompt = PromptBox(screenSize: self.screenSize, title: "Dictionary.", msg: "Try to recognize this selection?", buttons: ["Yes", "No"], name: "selrect")
-                    var appDel = UIApplication.sharedApplication().delegate as AppDelegate
-                    appDel.disablePageAndShowDialog(translationPrompt)
-                }
-            })
+        autoreleasepool({ () -> () in
+            if self.canTapSelRect{
+                println("selRect Tapped")
+                self.canTapSelRect = false
+                var translationPrompt = PromptBox(screenSize: self.screenSize, title: "Dictionary.", msg: "Try to recognize this selection?", buttons: ["Yes", "No"], name: "selrect")
+                var appDel = UIApplication.sharedApplication().delegate as AppDelegate
+                appDel.disablePageAndShowDialog(translationPrompt)
+            }
         })
     }
     
@@ -307,62 +306,67 @@ class CamHomeController: UIViewController, CursorDelegate, TesseractDelegate{
                                 self.tesseract.image = bw_img.blackAndWhite()
                                 if self.tesseract.recognize(){
                                     var recText = self.tesseract.recognizedText
-                                    var error = false
-                                    if recText == ""{
-                                        recText = "Error."
-                                        error = true
-                                    }
-                                    println("RECOGNIZED: \(recText)")
-                                    //                                    API.googleTranslate(recText)
-                                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                                        var height = imageView.frame.height
-                                        var width = imageView.frame.width
-                                        if height < 30{
-                                            height = 30
+                                    self.translator = FGTranslator(bingAzureClientId: "timothytong001", secret: "ykVQA7+f2GNEG6ihLEK+OwYrXmfo3fkIy+wq17aYwyE=")
+                                    self.translator!.translateText(recText, completion: { (err, translated, sourceLang) -> Void in
+                                        
+                                        var error = false
+                                        if recText == ""{
+                                            recText = "Error."
+                                            error = true
                                         }
-                                        if width < 60{
-                                            width = 60
-                                        }
-                                        if (self.ocrResultWindow != nil){
-                                            self.ocrResultWindow.removeFromSuperview()
-                                            self.ocrResultWindow = nil
-                                        }
-                                        self.ocrResultWindow = UIView(frame:CGRectMake(imageView.frame.origin.x, imageView.frame.origin.y, width, height))
-                                        self.ocrResultWindow.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.8)
-                                        self.ocrResultWindow.alpha = 0
-                                        self.ocrResultWindow.clipsToBounds = true
-                                        var txtLabel = UILabel(frame: CGRectMake(0, 0, width, height))
-                                        txtLabel.text = recText
-                                        var fontSize:CGFloat = 18 + height * 0.15
-                                        txtLabel.font = UIFont(name: "HelveticaNeue-Thin", size: fontSize)
-                                        if fontSize > 25{
-                                            fontSize = 25
-                                        }
-                                        txtLabel.textAlignment = .Center
-                                        self.ocrResultWindow.addSubview(txtLabel)
-                                        self.view.addSubview(self.ocrResultWindow)
-                                        if error{
-                                            UIView.animateWithDuration(0.3, delay: 1, options: .CurveEaseInOut, animations: { () -> Void in
-                                                self.ocrResultWindow.alpha = 0
-                                                }, completion: { (complete) -> Void in
-                                            })
-                                        }
-                                        else{
-                                            UIView.animateWithDuration(1, delay: 3.7, options: .CurveEaseInOut, animations: { () -> Void in
-                                                self.ocrResultWindow.transform = CGAffineTransformMakeTranslation(self.screenWidth - 5 - self.ocrResultWindow.frame.width - self.ocrResultWindow.frame.origin.x, 5 - self.ocrResultWindow.frame.origin.y)
-                                                }, completion: { (complete) -> Void in
-                                                    var translationLbl = UILabel(frame: CGRectMake(0, height, width, height))
-                                                    translationLbl.text = "Translation"
-                                                    translationLbl.textAlignment = .Center
-                                                    translationLbl.font = UIFont(name: "HelveticaNeue-Ultralight", size: fontSize)
-                                                    self.ocrResultWindow.addSubview(translationLbl)
-                                                    UIView.animateWithDuration(0.6, delay: 0, options: .CurveEaseInOut, animations: { () -> Void in
-                                                        self.ocrResultWindow.frame = CGRectMake(self.ocrResultWindow.frame.origin.x, self.ocrResultWindow.frame.origin.y, self.ocrResultWindow.frame.width, 2 * self.ocrResultWindow.frame.height)
-                                                        }, completion: { (complete) -> Void in
-                                                            
-                                                    })
-                                            })
-                                        }
+                                        println("RECOGNIZED: \(recText)")
+                                        //                                    API.googleTranslate(recText)
+                                        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                                            var height = imageView.frame.height
+                                            var width = imageView.frame.width
+                                            if height < 30{
+                                                height = 30
+                                            }
+                                            if width < 60{
+                                                width = 60
+                                            }
+                                            if (self.ocrResultWindow != nil){
+                                                self.ocrResultWindow.removeFromSuperview()
+                                                self.ocrResultWindow = nil
+                                            }
+                                            self.ocrResultWindow = UIView(frame:CGRectMake(imageView.frame.origin.x, imageView.frame.origin.y, width, height))
+                                            self.ocrResultWindow.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.8)
+                                            self.ocrResultWindow.alpha = 0
+                                            self.ocrResultWindow.clipsToBounds = true
+                                            var txtLabel = UILabel(frame: CGRectMake(0, 0, width, height))
+                                            txtLabel.text = recText
+                                            var fontSize:CGFloat = 18 + height * 0.15
+                                            txtLabel.font = UIFont(name: "HelveticaNeue-Thin", size: fontSize)
+                                            if fontSize > 25{
+                                                fontSize = 25
+                                            }
+                                            txtLabel.textAlignment = .Center
+                                            self.ocrResultWindow.addSubview(txtLabel)
+                                            self.view.addSubview(self.ocrResultWindow)
+                                            if error{
+                                                UIView.animateWithDuration(0.3, delay: 1, options: .CurveEaseInOut, animations: { () -> Void in
+                                                    self.ocrResultWindow.alpha = 0
+                                                    }, completion: { (complete) -> Void in
+                                                })
+                                            }
+                                            else{
+                                                UIView.animateWithDuration(1, delay: 3.7, options: .CurveEaseInOut, animations: { () -> Void in
+                                                    self.ocrResultWindow.transform = CGAffineTransformMakeTranslation(self.screenWidth - 5 - self.ocrResultWindow.frame.width - self.ocrResultWindow.frame.origin.x, 5 - self.ocrResultWindow.frame.origin.y)
+                                                    }, completion: { (complete) -> Void in
+                                                        var translationLbl = UILabel(frame: CGRectMake(0, height, width, height))
+                                                        translationLbl.text = translated
+                                                        translationLbl.textAlignment = .Center
+                                                        translationLbl.font = UIFont(name: "HelveticaNeue-Ultralight", size: fontSize)
+                                                        self.ocrResultWindow.addSubview(translationLbl)
+                                                        UIView.animateWithDuration(0.6, delay: 0, options: .CurveEaseInOut, animations: { () -> Void in
+                                                            self.ocrResultWindow.frame = CGRectMake(self.ocrResultWindow.frame.origin.x, self.ocrResultWindow.frame.origin.y, self.ocrResultWindow.frame.width, 2 * self.ocrResultWindow.frame.height)
+                                                            }, completion: { (complete) -> Void in
+                                                                
+                                                        })
+                                                })
+                                            }
+                                        })
+                                        
                                     })
                                 }else{
                                     println("Cannot recognize text.")

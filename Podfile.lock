@@ -20,14 +20,17 @@ PODS:
   - AFNetworking/UIKit (2.5.0):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
+  - FGTranslator (1.0.2):
+    - AFNetworking (~> 2.2)
   - TesseractOCRiOS (3.4.0)
 
 DEPENDENCIES:
-  - AFNetworking (~> 2.0)
+  - FGTranslator
   - TesseractOCRiOS (= 3.4.0)
 
 SPEC CHECKSUMS:
   AFNetworking: 0f54cb5d16ce38c1b76948faffb8d5fb705021c7
+  FGTranslator: 1d8f13b1e7ffad1c22f3b7d16253e25b03942e2f
   TesseractOCRiOS: b2bdfc2c1041114ce146d2086d2376cfae17ff26
 
 COCOAPODS: 0.35.0

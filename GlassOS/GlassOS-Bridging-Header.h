@@ -10,3 +10,4 @@
 #import "AFHTTPRequestOperationManager.h"
 #import "AFHTTPSessionManager.h"
 #import "AFNetworkActivityIndicatorManager.h"
+#import "FGTranslator.h"

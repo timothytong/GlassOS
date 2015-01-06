@@ -48,6 +48,12 @@
 #define COCOAPODS_VERSION_MINOR_AFNetworking_UIKit 5
 #define COCOAPODS_VERSION_PATCH_AFNetworking_UIKit 0
 
+// FGTranslator
+#define COCOAPODS_POD_AVAILABLE_FGTranslator
+#define COCOAPODS_VERSION_MAJOR_FGTranslator 1
+#define COCOAPODS_VERSION_MINOR_FGTranslator 0
+#define COCOAPODS_VERSION_PATCH_FGTranslator 2
+
 // TesseractOCRiOS
 #define COCOAPODS_POD_AVAILABLE_TesseractOCRiOS
 #define COCOAPODS_VERSION_MAJOR_TesseractOCRiOS 3
