@@ -35,12 +35,17 @@ class MenuBlock: UIView {
         backCircle.alpha = 0
         isHilighted = false
         isEnabled = false
-        imgView = UIImageView(frame: CGRectMake(0, 0, frame.width, frame.height))
-        imgView.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.3)
+        var imgViewBG = UIView(frame: CGRectMake(0, 0, frame.width, frame.height))
+        imgViewBG.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.4)
+        backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.4)
+        imgView = UIImageView(frame: CGRectMake(2, 2, frame.width-4, frame.height-4))
         imgView.image = img
+        imgView.backgroundColor = UIColor.clearColor()
+        imgViewBG.addSubview(imgView)
         addSubview(imgView)
-        sel_imgView = UIImageView(frame: CGRectMake(0, 0, frame.width, frame.height))
+        sel_imgView = UIImageView(frame: CGRectMake(2, 2, frame.width-4, frame.height-4))
         sel_imgView.image = hilight_img
+        sel_imgView.backgroundColor = UIColor.clearColor()
         addSubview(sel_imgView)
         sel_imgView.alpha = 0
         caption = func_name
@@ -84,6 +89,8 @@ class MenuBlock: UIView {
     }
     func enable(){
         if !isEnabled{
+            self.backgroundColor = UIColor.clearColor()
+            self.bringSubviewToFront(self.backCircle)
             UIView.animateWithDuration(0.2, delay: 0, options: UIViewAnimationOptions.CurveEaseIn, animations: { () -> Void in
                 self.backCircle.alpha = 1
                 }) { (complete) -> Void in
@@ -93,7 +100,6 @@ class MenuBlock: UIView {
         }
     }
     func animateBackground(){
-        println("Animating!!")
         dispatch_async(dispatch_get_main_queue(), { () -> Void in
             UIView.animateWithDuration(0.3, delay: 0, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
                 self.backCircle.transform = CGAffineTransformMakeScale(1.3, 1.3)

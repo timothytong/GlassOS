@@ -35,7 +35,7 @@ class Menu: UIView, MenuBlockDelegate {
         }
         for i in 0..<numItems{
             var dict = arrayDicts![i] as NSDictionary
-            var block = MenuBlock(frame: CGRectMake(3, 48 * CGFloat(i), singleHeight, singleHeight), img: dict.objectForKey("norm_img") as UIImage, hilight_img: dict.objectForKey("sel_img") as UIImage, func_name: dict.objectForKey("caption") as String)
+            var block = MenuBlock(frame: CGRectMake(3, 65 * CGFloat(i), singleHeight, singleHeight), img: dict.objectForKey("norm_img") as UIImage, hilight_img: dict.objectForKey("sel_img") as UIImage, func_name: dict.objectForKey("caption") as String)
             block.tag = i
             block.delegate = self
             var tap = UITapGestureRecognizer(target: self, action: "blockTapped:")
@@ -57,24 +57,27 @@ class Menu: UIView, MenuBlockDelegate {
     }
     func showMenu(){
         //        println("Showing")
-        UIView.animateWithDuration(0.3, delay: 0, options: UIViewAnimationOptions.CurveEaseIn, animations: { () -> Void in
+        UIView.animateWithDuration(0.5, delay: 0, options: UIViewAnimationOptions.CurveEaseIn, animations: { () -> Void in
             self.alpha = 1
             self.background.frame = CGRectMake(0, 0, self.background.frame.width, self.background.frame.height)
-            for i in 0..<self.numItems{
-                self.showOptionNum(i)
-            }
             }) { (complete) -> Void in
                 var block = self.slots[0] as MenuBlock
                 block.highlight()
                 self.activ_slot = block
                 var timer = NSTimer.scheduledTimerWithTimeInterval(30, target: self, selector: "hideMenu", userInfo: nil, repeats: false)
         }
+        for i in 0..<self.numItems{
+            self.showOptionNum(i)
+        }
+        var block = self.slots[0] as MenuBlock
+        block.enable()
     }
     func showOptionNum(input:Int){
         //        println("showing \(input)")
-        var i = input
-        UIView.animateWithDuration(1, delay: (0.1 * (Double(i)+1)), options: UIViewAnimationOptions.CurveEaseIn, animations: { () -> Void in
-            var block = self.slots[i]
+        var i = Double(input)
+        var time = 0.3 + 0.1*i
+        UIView.animateWithDuration(time, delay: 0, options: UIViewAnimationOptions.CurveEaseIn, animations: { () -> Void in
+            var block = self.slots[input]
             block.frame = CGRectMake(3,CGFloat(2+2*i+i*44) , self.singleHeight, self.singleHeight)
             block.alpha = 1
             }) { (complete) -> Void in
@@ -84,7 +87,7 @@ class Menu: UIView, MenuBlockDelegate {
         for i in 0..<self.numItems{
             self.hideOptionNum(i)
         }
-        UIView.animateWithDuration(0.3, delay: (0.1 * (Double(self.numItems)+1)), options: UIViewAnimationOptions.CurveEaseIn, animations: { () -> Void in
+        UIView.animateWithDuration(0.3, delay: 0.5 + 0.1 * Double(self.numItems), options: UIViewAnimationOptions.CurveEaseIn, animations: { () -> Void in
             self.alpha = 0
             self.background.frame = CGRectMake(0, 50, self.background.frame.width, self.background.frame.height)
             }) { (complete) -> Void in
@@ -92,10 +95,11 @@ class Menu: UIView, MenuBlockDelegate {
     }
     func hideOptionNum(input:Int){
         //        println("hiding \(input)")
-        var i = input
-        UIView.animateWithDuration(1, delay: (0.1 * (Double(i)+1)), options: UIViewAnimationOptions.CurveEaseIn, animations: { () -> Void in
-            var block = self.slots[i]
-            block.frame = CGRectMake(3,48 * CGFloat(i) , self.singleHeight, self.singleHeight)
+        var i = Double(input)
+        var time = 0.2 + 0.1*i
+        UIView.animateWithDuration(time, delay: 0, options: UIViewAnimationOptions.CurveEaseIn, animations: { () -> Void in
+            var block = self.slots[input]
+            block.frame = CGRectMake(3,65 * CGFloat(i) , self.singleHeight, self.singleHeight)
             block.alpha = 0
             }) { (complete) -> Void in
         }

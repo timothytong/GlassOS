@@ -31,7 +31,6 @@ class CamHomeController: UIViewController, CursorDelegate, TesseractDelegate{
     private var ocrResultWindow: UIView!
     private var mainMenu: Menu!
     private var mainMenuArray: Array<NSDictionary>!
-    private var translator: FGTranslator?
     var delegate: CamHomeControllerDelegate?
     
     let screenWidth = UIScreen.mainScreen().bounds.size.width
@@ -298,11 +297,11 @@ class CamHomeController: UIViewController, CursorDelegate, TesseractDelegate{
                                     var recText = tesseract.recognizedText
                                     tesseract = nil
                                     println("RECOGNIZED: \(recText)")
-                                    self.translator = FGTranslator(bingAzureClientId: "timothytong001", secret: "ykVQA7+f2GNEG6ihLEK+OwYrXmfo3fkIy+wq17aYwyE=")
-                                    self.translator!.translateText(recText, completion: { (err, translated, sourceLang) -> Void in
+                                    var translator = FGTranslator(bingAzureClientId: "timothytong001", secret: "ykVQA7+f2GNEG6ihLEK+OwYrXmfo3fkIy+wq17aYwyE=")
+                                    translator!.translateText(recText, completion: { (err, translated, sourceLang) -> Void in
                                         autoreleasepool({ () -> () in
                                             println("Translation complete: \(recText) -> \(translated)")
-                                            self.translator = nil
+                                            translator = nil
                                             var error = false
                                             if recText == ""{
                                                 recText = "Error."
