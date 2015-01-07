@@ -64,7 +64,7 @@ class CamHomeController: UIViewController, CursorDelegate, TesseractDelegate{
             
             
             // Tesseract OCR
-            self.tesseract = Tesseract(language: "chi_sim")
+            self.tesseract = Tesseract(language: "chi_sim+chi_tra")
             self.tesseract.delegate = self
             // Dialog box
             //        var timer = NSTimer.scheduledTimerWithTimeInterval(4, target: self, selector: "showTestPromptWindow", userInfo: nil, repeats: false)
@@ -164,6 +164,7 @@ class CamHomeController: UIViewController, CursorDelegate, TesseractDelegate{
             println("ended")
             self.canTapSelRect = true
             println("canTapSelRect set to true")
+            
         }
         //        })
     }
@@ -278,22 +279,12 @@ class CamHomeController: UIViewController, CursorDelegate, TesseractDelegate{
                     self.cursor.endDragging()
                     var image:UIImage = capturedImg!
                     var gpuImg = GPUImagePicture(image: image)
-                    //                    var cropPath = UIBezierPath(roundedRect: CGRectMake(0, 0, self.selRect.frame.width, self.selRect.frame.height), cornerRadius: 0)
-                    //                    var mask = CAShapeLayer()
-                    //                    mask.frame = CGRectMake(self.selRect.frame.origin.x, self.selRect.frame.origin.y
-                    //                        , self.selRect.frame.width, self.selRect.frame.height)
-                    //                    mask.path = cropPath.CGPath
-                    //                    var imageView = UIImageView(frame: CGRectMake(0, 0, self.screenWidth, self.screenHeight))
-                    //                    println("CropRect: (\(self.selRect.frame.origin.x),\(self.selRect.frame.origin.y),\(self.selRect.frame.width),\(self.selRect.frame.height))")
+                    
                     var cropRect = CGRectMake(self.selRect.frame.origin.x/self.screenWidth, self.selRect.frame.origin.y/self.screenHeight, self.selRect.frame.width/self.screenWidth, self.selRect.frame.height/self.screenHeight)
                     var cropFilter = GPUImageCropFilter(cropRegion: cropRect)
-                    //                    gpuImg.addTarget(cropFilter)
-                    //                    cropFilter.useNextFrameForImageCapture()
-                    //                    gpuImg.processImage()
                     var croppedImg = cropFilter.imageByFilteringImage(image)
                     var imageView = UIImageView(frame: self.selRect.frame)
                     imageView.image = croppedImg
-                    //                    imageView.layer.mask = mask
                     imageView.alpha = 0
                     self.view.addSubview(imageView)
                     UIView.animateWithDuration(0.25, delay: 0, options: .CurveEaseIn, animations: { () -> Void in
@@ -308,38 +299,35 @@ class CamHomeController: UIViewController, CursorDelegate, TesseractDelegate{
                                     var recText = self.tesseract.recognizedText
                                     self.translator = FGTranslator(bingAzureClientId: "timothytong001", secret: "ykVQA7+f2GNEG6ihLEK+OwYrXmfo3fkIy+wq17aYwyE=")
                                     self.translator!.translateText(recText, completion: { (err, translated, sourceLang) -> Void in
-                                        
+                                        println(sourceLang)
+                                        self.translator = nil
                                         var error = false
                                         if recText == ""{
                                             recText = "Error."
                                             error = true
                                         }
                                         println("RECOGNIZED: \(recText)")
-                                        //                                    API.googleTranslate(recText)
                                         dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                                            var height = imageView.frame.height
-                                            var width = imageView.frame.width
-                                            if height < 30{
-                                                height = 30
-                                            }
-                                            if width < 60{
-                                                width = 60
-                                            }
+                                            var recLabelText = recText as NSString
+                                            var recTextRectSize = recLabelText.boundingRectWithSize(CGSizeMake(200, 150), options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont(name: "HelveticaNeue-Thin", size: 24)!], context: nil).size
+                                            var transTextRectSize = translated.boundingRectWithSize(CGSizeMake(200, 40), options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont(name: "HelveticaNeue-Thin", size: 24)!], context: nil).size
+                                            var finalRectSize = (recTextRectSize.width >= transTextRectSize.width) ? recTextRectSize : transTextRectSize
                                             if (self.ocrResultWindow != nil){
                                                 self.ocrResultWindow.removeFromSuperview()
                                                 self.ocrResultWindow = nil
                                             }
-                                            self.ocrResultWindow = UIView(frame:CGRectMake(imageView.frame.origin.x, imageView.frame.origin.y, width, height))
-                                            self.ocrResultWindow.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.8)
+                                            self.ocrResultWindow = UIView(frame:CGRectMake(imageView.frame.origin.x, imageView.frame.origin.y, finalRectSize.width + 10, finalRectSize.height + 10))
+                                            self.ocrResultWindow.backgroundColor = UIColor.whiteColor()
                                             self.ocrResultWindow.alpha = 0
                                             self.ocrResultWindow.clipsToBounds = true
-                                            var txtLabel = UILabel(frame: CGRectMake(0, 0, width, height))
+                                            
+                                            // dynamic label size
+                                            // code to generate a bounding rect for text at various font sizes
+                                           
+                                            
+                                            var txtLabel = UILabel(frame: CGRectMake(5, 5, finalRectSize.width, finalRectSize.height))
                                             txtLabel.text = recText
-                                            var fontSize:CGFloat = 18 + height * 0.15
-                                            txtLabel.font = UIFont(name: "HelveticaNeue-Thin", size: fontSize)
-                                            if fontSize > 25{
-                                                fontSize = 25
-                                            }
+                                            txtLabel.font = UIFont(name: "HelveticaNeue-Thin", size: 24)
                                             txtLabel.textAlignment = .Center
                                             self.ocrResultWindow.addSubview(txtLabel)
                                             self.view.addSubview(self.ocrResultWindow)
@@ -347,19 +335,21 @@ class CamHomeController: UIViewController, CursorDelegate, TesseractDelegate{
                                                 UIView.animateWithDuration(0.3, delay: 1, options: .CurveEaseInOut, animations: { () -> Void in
                                                     self.ocrResultWindow.alpha = 0
                                                     }, completion: { (complete) -> Void in
+                                                        let delegate = UIApplication.sharedApplication().delegate as AppDelegate
+                                                        delegate.disablePageAndDisplayNotice("Error", msg: "Translation failed")
                                                 })
                                             }
                                             else{
                                                 UIView.animateWithDuration(1, delay: 3.7, options: .CurveEaseInOut, animations: { () -> Void in
                                                     self.ocrResultWindow.transform = CGAffineTransformMakeTranslation(self.screenWidth - 5 - self.ocrResultWindow.frame.width - self.ocrResultWindow.frame.origin.x, 5 - self.ocrResultWindow.frame.origin.y)
                                                     }, completion: { (complete) -> Void in
-                                                        var translationLbl = UILabel(frame: CGRectMake(0, height, width, height))
+                                                        var translationLbl = UILabel(frame: CGRectMake(5, finalRectSize.height + 5, finalRectSize.width, finalRectSize.height))
                                                         translationLbl.text = translated
                                                         translationLbl.textAlignment = .Center
-                                                        translationLbl.font = UIFont(name: "HelveticaNeue-Ultralight", size: fontSize)
+                                                        translationLbl.font = UIFont(name: "HelveticaNeue-Thin", size: 24)
                                                         self.ocrResultWindow.addSubview(translationLbl)
                                                         UIView.animateWithDuration(0.6, delay: 0, options: .CurveEaseInOut, animations: { () -> Void in
-                                                            self.ocrResultWindow.frame = CGRectMake(self.ocrResultWindow.frame.origin.x, self.ocrResultWindow.frame.origin.y, self.ocrResultWindow.frame.width, 2 * self.ocrResultWindow.frame.height)
+                                                            self.ocrResultWindow.frame = CGRectMake(self.ocrResultWindow.frame.origin.x, self.ocrResultWindow.frame.origin.y, self.ocrResultWindow.frame.width, 2 * self.ocrResultWindow.frame.height - 10)
                                                             }, completion: { (complete) -> Void in
                                                                 
                                                         })
@@ -412,7 +402,7 @@ class CamHomeController: UIViewController, CursorDelegate, TesseractDelegate{
     func cursorFocus(){
         if let device = captureDevice{
             if device.focusMode != .Locked && device.exposureMode != .Custom{
-                var devicePoint:CGPoint = previewLayer!.captureDevicePointOfInterestForPoint(CGPointMake(cursor.frame.origin.x + 6, cursor.frame.origin.y))
+                var devicePoint:CGPoint = previewLayer!.captureDevicePointOfInterestForPoint(CGPointMake(cursor.frame.origin.x + 6 / self.screenWidth, cursor.frame.origin.y / self.screenHeight))
                 focusWithMode(.ContinuousAutoFocus, exposeWithMode: .ContinuousAutoExposure, atDevicePoint: devicePoint, monitorSubjectAreaChange: true)
             }
         }
@@ -460,7 +450,8 @@ class CamHomeController: UIViewController, CursorDelegate, TesseractDelegate{
         if let device = captureDevice{
         println("Focusing to point...")
         var point = touch.locationInView(self.view)
-        focusWithMode(.ContinuousAutoFocus, exposeWithMode: .ContinuousAutoExposure, atDevicePoint: point, monitorSubjectAreaChange: true)
+        var newPoint = CGPointMake(point.x / self.screenWidth, point.y / self.screenHeight)
+        focusWithMode(.ContinuousAutoFocus, exposeWithMode: .ContinuousAutoExposure, atDevicePoint: newPoint, monitorSubjectAreaChange: true)
         }
         */
     }

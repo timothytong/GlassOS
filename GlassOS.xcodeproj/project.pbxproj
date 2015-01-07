@@ -29,6 +29,7 @@
 		33AE1C111A49CDA300C1A723 /* Cursor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33AE1C101A49CDA300C1A723 /* Cursor.swift */; };
 		33C0D5571A5B6B4500AB4D5E /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C0D5561A5B6B4500AB4D5E /* Constants.swift */; };
 		33C0D5591A5B6CFB00AB4D5E /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C0D5581A5B6CFB00AB4D5E /* API.swift */; };
+		33D65C1B1A5CCBC800149D79 /* StatusCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33D65C1A1A5CCBC800149D79 /* StatusCenter.swift */; };
 		33DAB8431A452360007F6A02 /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DAB8421A452360007F6A02 /* Menu.swift */; };
 		33F8D83D1A5A4F7D00D3C755 /* tessdata in Resources */ = {isa = PBXBuildFile; fileRef = 33F8D83C1A5A4F7D00D3C755 /* tessdata */; };
 		33F8D83E1A5A52D300D3C755 /* GPUImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33BE1A151A58AFB20033C64A /* GPUImage.framework */; };
@@ -111,6 +112,7 @@
 		33BE1A151A58AFB20033C64A /* GPUImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GPUImage.framework; path = "../../../Library/Developer/Xcode/DerivedData/GlassOS-ewyfxjjmxwdyykbdedqakntkrcde/Build/Products/Debug-iphoneos/GPUImage.framework"; sourceTree = "<group>"; };
 		33C0D5561A5B6B4500AB4D5E /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		33C0D5581A5B6CFB00AB4D5E /* API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
+		33D65C1A1A5CCBC800149D79 /* StatusCenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatusCenter.swift; sourceTree = "<group>"; };
 		33DAB8421A452360007F6A02 /* Menu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
 		33F8D8281A5A38CC00D3C755 /* GlassOS-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "GlassOS-Bridging-Header.h"; path = "GlassOS/GlassOS-Bridging-Header.h"; sourceTree = "<group>"; };
 		33F8D83C1A5A4F7D00D3C755 /* tessdata */ = {isa = PBXFileReference; lastKnownFileType = folder; path = tessdata; sourceTree = "<group>"; };
@@ -170,6 +172,7 @@
 				33C0D5581A5B6CFB00AB4D5E /* API.swift */,
 				337B8E4D1A45578E009A01F7 /* UIElements */,
 				334FA4781A3B567F0065A87D /* CamHomeController.swift */,
+				33D65C1A1A5CCBC800149D79 /* StatusCenter.swift */,
 				334FA4771A3B567F0065A87D /* RootController.swift */,
 				334FA4791A3B567F0065A87D /* MainController.swift */,
 				334FA4571A3B56480065A87D /* AppDelegate.swift */,
@@ -437,6 +440,7 @@
 				334FA47B1A3B567F0065A87D /* CamHomeController.swift in Sources */,
 				338EB0991A45261E008CF15C /* TranslationBox.swift in Sources */,
 				33AE1C111A49CDA300C1A723 /* Cursor.swift in Sources */,
+				33D65C1B1A5CCBC800149D79 /* StatusCenter.swift in Sources */,
 				33FCAEF91A3B5B9A007FBFF2 /* NotificationBox.swift in Sources */,
 				334FA4581A3B56480065A87D /* AppDelegate.swift in Sources */,
 				33C0D5591A5B6CFB00AB4D5E /* API.swift in Sources */,
