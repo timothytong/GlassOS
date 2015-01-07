@@ -17,6 +17,7 @@ class RootController: UIViewController, CamHomeControllerDelegate {
     private var promptBoxIsCurrentlyVisible = false
     private var promptBoxQueue: Array<PromptBox>!
     private var progressBar: UIProgressView!
+    private var statusText: UILabel!
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
@@ -48,8 +49,19 @@ class RootController: UIViewController, CamHomeControllerDelegate {
         progressBar.setProgress(0, animated: false)
         progressBar.alpha = 0
         view.addSubview(progressBar)
+        statusText = UILabel(frame: CGRectMake(5, view.frame.height/2 - 50, view.frame.width - 10, 40))
+        statusText.text = ""
+        statusText.font = UIFont(name: "HelveticaNeue-Thin", size: 25)
+        statusText.textAlignment = .Center
+        view.addSubview(statusText)
+        view.sendSubviewToBack(statusText)
     }
-    
+    override func didReceiveMemoryWarning() {
+        if (pageView != nil){
+            statusText.text = "Memory limit reached, reinitializing."
+            
+        }
+    }
     func transitionToCamController(controller:UIViewController?){
         UIView.animateWithDuration(1, delay: 0.3, options: UIViewAnimationOptions.CurveEaseOut, animations: { () -> Void in
             self.pageView!.alpha = 0
@@ -125,6 +137,18 @@ class RootController: UIViewController, CamHomeControllerDelegate {
     func setProgress(num: Float){
         dispatch_async(dispatch_get_main_queue(), { () -> Void in
             self.progressBar.setProgress(num, animated: true)
+            if num >= 0 && num < 0.2{
+                self.statusText.text = "Initializing."
+            }
+            else if num >= 0.4 && num < 0.5{
+                self.statusText.text = "Preparing UI."
+            }
+            else if num >= 0.5 && num < 0.8{
+                self.statusText.text = "Configuring Camera."
+            }
+            else{
+                self.statusText.text = "Finishing Preparations."
+            }
         })
     }
 }
