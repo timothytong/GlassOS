@@ -26,6 +26,7 @@ class MenuBlock: UIView {
     init(frame: CGRect, img: UIImage!, hilight_img: UIImage!, func_name: String!){
         super.init(frame: frame)
         backCircle = UIView(frame: CGRectMake(0, 0, frame.width, frame.height))
+        backCircle.userInteractionEnabled = false
         var path = UIBezierPath(roundedRect: CGRectMake(0, 0, frame.width, frame.height), cornerRadius: frame.width/2)
         var mask = CAShapeLayer()
         mask.path = path.CGPath
@@ -89,7 +90,6 @@ class MenuBlock: UIView {
     }
     func enable(){
         if !isEnabled{
-            self.backgroundColor = UIColor.clearColor()
             self.bringSubviewToFront(self.backCircle)
             UIView.animateWithDuration(0.2, delay: 0, options: UIViewAnimationOptions.CurveEaseIn, animations: { () -> Void in
                 self.backCircle.alpha = 1
