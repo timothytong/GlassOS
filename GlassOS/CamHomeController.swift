@@ -32,10 +32,7 @@ class CamHomeController: UIViewController, CursorDelegate, TesseractDelegate{
     private var mainMenu: Menu!
     private var mainMenuArray: Array<NSDictionary>!
     var delegate: CamHomeControllerDelegate?
-    
-    let screenWidth = UIScreen.mainScreen().bounds.size.width
-    let screenHeight = UIScreen.mainScreen().bounds.size.height
-    let screenSize = UIScreen.mainScreen().bounds.size
+    let screenSize = Constants.screenSize()
     override func viewDidLoad() {
         super.viewDidLoad()
         self.delegate?.setProgress(0.2)
@@ -273,12 +270,13 @@ class CamHomeController: UIViewController, CursorDelegate, TesseractDelegate{
                     // Tesseract OCR
                     var tesseract = Tesseract(language: "chi_sim+chi_tra")
                     tesseract.delegate = self
-                    
+                    var status = StatusCenter.sharedInstance
+                    status.displayStatus("Analyzing Image.")
                     self.cursor.endDragging()
                     var image:UIImage = capturedImg!
                     var gpuImg = GPUImagePicture(image: image)
                     
-                    var cropRect = CGRectMake(self.selRect.frame.origin.x/self.screenWidth, self.selRect.frame.origin.y/self.screenHeight, self.selRect.frame.width/self.screenWidth, self.selRect.frame.height/self.screenHeight)
+                    var cropRect = CGRectMake(self.selRect.frame.origin.x/self.screenSize.width, self.selRect.frame.origin.y/self.screenSize.height, self.selRect.frame.width/self.screenSize.width, self.selRect.frame.height/self.screenSize.height)
                     var cropFilter = GPUImageCropFilter(cropRegion: cropRect)
                     var croppedImg = cropFilter.imageByFilteringImage(image)
                     var imageView = UIImageView(frame: self.selRect.frame)
@@ -297,6 +295,7 @@ class CamHomeController: UIViewController, CursorDelegate, TesseractDelegate{
                                     var recText = tesseract.recognizedText
                                     tesseract = nil
                                     println("RECOGNIZED: \(recText)")
+                                                        status.displayStatus("Recognized.")
                                     var translator = FGTranslator(bingAzureClientId: "timothytong001", secret: "ykVQA7+f2GNEG6ihLEK+OwYrXmfo3fkIy+wq17aYwyE=")
                                     translator!.translateText(recText, completion: { (err, translated, sourceLang) -> Void in
                                         autoreleasepool({ () -> () in
@@ -341,7 +340,7 @@ class CamHomeController: UIViewController, CursorDelegate, TesseractDelegate{
                                                 }
                                                 else{
                                                     UIView.animateWithDuration(1, delay: 3.7, options: .CurveEaseInOut, animations: { () -> Void in
-                                                        self.ocrResultWindow.transform = CGAffineTransformMakeTranslation(self.screenWidth - 5 - self.ocrResultWindow.frame.width - self.ocrResultWindow.frame.origin.x, 5 - self.ocrResultWindow.frame.origin.y)
+                                                        self.ocrResultWindow.transform = CGAffineTransformMakeTranslation(self.screenSize.width - 5 - self.ocrResultWindow.frame.width - self.ocrResultWindow.frame.origin.x, 5 - self.ocrResultWindow.frame.origin.y)
                                                         }, completion: { (complete) -> Void in
                                                             var translationLbl = UILabel(frame: CGRectMake(5, finalRectSize.height + 5, finalRectSize.width, finalRectSize.height))
                                                             translationLbl.text = translated
@@ -402,7 +401,7 @@ class CamHomeController: UIViewController, CursorDelegate, TesseractDelegate{
     func cursorFocus(){
         if let device = captureDevice{
             if device.focusMode != .Locked && device.exposureMode != .Custom{
-                var devicePoint:CGPoint = previewLayer!.captureDevicePointOfInterestForPoint(CGPointMake(cursor.frame.origin.x + 6 / self.screenWidth, cursor.frame.origin.y / self.screenHeight))
+                var devicePoint:CGPoint = previewLayer!.captureDevicePointOfInterestForPoint(CGPointMake(cursor.frame.origin.x + 6 / self.screenSize.width, cursor.frame.origin.y / self.screenSize.height))
                 focusWithMode(.ContinuousAutoFocus, exposeWithMode: .ContinuousAutoExposure, atDevicePoint: devicePoint, monitorSubjectAreaChange: true)
             }
         }

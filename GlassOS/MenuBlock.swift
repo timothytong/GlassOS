@@ -31,14 +31,12 @@ class MenuBlock: UIView {
         var mask = CAShapeLayer()
         mask.path = path.CGPath
         backCircle.layer.mask = mask
-        backCircle.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.4)
+        backCircle.backgroundColor = UIColor(red: 1, green: 58/255, blue: 81/255, alpha: 0.4)
         addSubview(backCircle)
         backCircle.alpha = 0
         isHilighted = false
         isEnabled = false
         var imgViewBG = UIView(frame: CGRectMake(0, 0, frame.width, frame.height))
-        imgViewBG.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.4)
-        backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.4)
         imgView = UIImageView(frame: CGRectMake(2, 2, frame.width-4, frame.height-4))
         imgView.image = img
         imgView.backgroundColor = UIColor.clearColor()
@@ -54,17 +52,16 @@ class MenuBlock: UIView {
         label = UILabel(frame: CGRectMake(0, 0, 95, frame.height))
         label.text = caption
         label.font = UIFont(name: "HelveticaNeue-Thin", size: 20)
-        //        label.shadowColor = UIColor(red: 200/255, green: 200/255, blue: 200/255, alpha: 0.8)
-        //        label.shadowOffset = CGSizeMake(-0.5, 0.5)
         label.textAlignment = NSTextAlignment.Right
         label.textColor = UIColor.blackColor()
         labelBG.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.3)
         labelBG.addSubview(label)
         addSubview(labelBG)
+        sendSubviewToBack(backCircle)
+        sendSubviewToBack(labelBG)
     }
     func highlight(){
         if !isHilighted{
-            //            label.shadowColor = UIColor(red: 150/255, green: 150/255, blue: 150/255, alpha: 0.8)
             UIView.animateWithDuration(0.25, delay: 0, options: UIViewAnimationOptions.CurveEaseIn, animations: { () -> Void in
                 self.sel_imgView.alpha = 1
                 }, completion: { (complete) -> Void in
@@ -83,14 +80,12 @@ class MenuBlock: UIView {
                     self.isHilighted = false
                     self.delegate?.animationCompl()
                     self.label.textColor = UIColor.blackColor()
-                    //            label.shadowColor = UIColor(red: 200/255, green: 200/255, blue: 200/255, alpha: 0.8)
                     self.labelBG.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.3)
             })
         }
     }
     func enable(){
         if !isEnabled{
-            self.bringSubviewToFront(self.backCircle)
             UIView.animateWithDuration(0.2, delay: 0, options: UIViewAnimationOptions.CurveEaseIn, animations: { () -> Void in
                 self.backCircle.alpha = 1
                 }) { (complete) -> Void in
@@ -101,10 +96,10 @@ class MenuBlock: UIView {
     }
     func animateBackground(){
         dispatch_async(dispatch_get_main_queue(), { () -> Void in
-            UIView.animateWithDuration(0.3, delay: 0, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
+            UIView.animateWithDuration(0.5, delay: 0, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
                 self.backCircle.transform = CGAffineTransformMakeScale(1.3, 1.3)
                 }, completion: { (complete) -> Void in
-                    UIView.animateWithDuration(0.3, delay: 0, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
+                    UIView.animateWithDuration(0.5, delay: 0, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
                         self.backCircle.transform = CGAffineTransformMakeScale(1, 1)
                         }, completion: { (complete) -> Void in
                             if (self.isEnabled == true)

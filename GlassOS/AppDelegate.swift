@@ -9,7 +9,7 @@
 import UIKit
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, PromptBoxDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, PromptBoxDelegate, RootControllerDelegate {
     
     var window: UIWindow?
     var mainController: UIViewController?
@@ -21,7 +21,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PromptBoxDelegate {
         window?.backgroundColor = UIColor.whiteColor()
         mainController = MainController()
         rootController = RootController(nibName: nil, bundle: nil)
-        rootController?.useController(mainController)
+        rootController!.useController(mainController)
+        rootController!.delegate = self
         camController = CamHomeController()
         window!.rootViewController = rootController
         window?.makeKeyAndVisible()
@@ -58,13 +59,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PromptBoxDelegate {
         
         if name == "notice"{
             if button == "OK"{
-                rootController?.dismissCurrentPromptWindow()
+                rootController!.dismissCurrentPromptWindow()
             }
         }
         
     }
     func dismissActivePromptWindow(){
-        rootController?.dismissCurrentPromptWindow()
+        rootController!.dismissCurrentPromptWindow()
+    }
+    func statusDismissed(){
+        var statusCenter = StatusCenter.sharedInstance
+        statusCenter.aStatusHasBeenDismissed()
+    }
+    func displayStatus(msg:String!, labelSize size:CGSize){
+        rootController?.displayStatus(msg, labelSize: size)
+    }
+    func rebootOS(){
+        camController = nil
+        camController = CamHomeController()
+        rootController?.transitionToCamController(camController)
     }
     func applicationWillResignActive(application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

@@ -11,5 +11,10 @@ class Constants{
     class func translationURL()->String{
         return "https://translate.google.com/#en/zh-CN/"
     }
-    let appVersion = 0.1
+    class func appVersion()->Float{
+        return 0.1
+    }
+    class func screenSize()->CGSize{
+        return UIScreen.mainScreen().bounds.size
+    }
 }
