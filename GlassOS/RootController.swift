@@ -109,7 +109,7 @@ class RootController: UIViewController, CamHomeControllerDelegate {
         else{
             numWarnings++
             var status = StatusCenter.sharedInstance
-            status.displayImportantStatus("Warning: Memory limit reached, system may reboot soon.")
+            status.displayImportantStatus("Warning: Memory limit reached, reboot imminent.")
         }
         
         

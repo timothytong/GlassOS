@@ -27,22 +27,23 @@ class StatusCenter{
     }
     
     func displayStatus(msg: String){
-        if statusQueue == nil{
-            statusQueue = [Dictionary<String, Any>]()
-        }
-        let appDel = UIApplication.sharedApplication().delegate as AppDelegate
-        var rectSize = msg.boundingRectWithSize(CGSizeMake(self.screenSize.width / 2, 0), options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont(name: "HelveticaNeue-Thin", size: 25)!], context: nil).size
-        if !aStatusIsActive && canShowNormalStatus{
-            aStatusIsActive = true
-            appDel.displayStatus(msg, labelSize: rectSize, isImportant: false)
-        }
-        else{
-            if canShowNormalStatus{
+        if canShowNormalStatus{
+            if statusQueue == nil{
+                statusQueue = [Dictionary<String, Any>]()
+            }
+            let appDel = UIApplication.sharedApplication().delegate as AppDelegate
+            var rectSize = msg.boundingRectWithSize(CGSizeMake(self.screenSize.width / 2, 0), options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont(name: "HelveticaNeue-Thin", size: 25)!], context: nil).size
+            if !aStatusIsActive{
+                aStatusIsActive = true
+                appDel.displayStatus(msg, labelSize: rectSize, isImportant: false)
+            }
+            else{
                 var newDict = [String:Any]()
                 newDict.updateValue(msg, forKey: "message")
                 newDict.updateValue(rectSize, forKey: "size")
                 statusQueue.append(newDict)
             }
+            
         }
     }
     
@@ -102,7 +103,7 @@ class StatusCenter{
     }
     
     func clearQueue(){
-        statusQueue = nil
+        statusQueue.removeAll(keepCapacity: false)
     }
     
     
