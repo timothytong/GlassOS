@@ -24,6 +24,7 @@ class RootController: UIViewController, CamHomeControllerDelegate {
     private var aStatusIsActive = false
     private var statusLabel: UILabel!
     private var axillaryLbl: UILabel!
+    private var numWarnings = 0
     var delegate: RootControllerDelegate?
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -79,26 +80,36 @@ class RootController: UIViewController, CamHomeControllerDelegate {
         axillaryLbl.lineBreakMode = .ByWordWrapping
         statusView.addSubview(axillaryLbl)
         view.addSubview(statusView)
+        
+        
     }
     override func didReceiveMemoryWarning() {
-        if (self.pageView != nil){
-            dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                var statusCenter = StatusCenter.sharedInstance
-                statusCenter.displayImportantStatus("Memory limit reached, rebooting.")
-                UIView.animateWithDuration(0.35, delay: 0, options: .CurveEaseInOut, animations: { () -> Void in
-                    self.pageView!.alpha = 0
-                    }, completion: { (complete) -> Void in
-                        let subviews : Array = self.pageView!.subviews
-                        for subview in subviews as [UIView]{
-                            subview.removeFromSuperview()
-                        }
-                        let appDel = UIApplication.sharedApplication().delegate as AppDelegate
-                        appDel.rebootOS()
+        if numWarnings == 2{
+            numWarnings = 0
+            if self.pageView != nil{
+                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    var statusCenter = StatusCenter.sharedInstance
+                    statusCenter.displayImportantStatus("Memory limit reached, rebooting.")
+                    UIView.animateWithDuration(0.35, delay: 0, options: .CurveEaseInOut, animations: { () -> Void in
+                        self.pageView!.alpha = 0
+                        }, completion: { (complete) -> Void in
+                            let subviews : Array = self.pageView!.subviews
+                            for subview in subviews as [UIView]{
+                                subview.removeFromSuperview()
+                            }
+                            let appDel = UIApplication.sharedApplication().delegate as AppDelegate
+                            appDel.rebootOS()
+                    })
+                    self.progressBar.setProgress(0, animated: false)
+                    self.progressText.text = "Reinitializing."
+                    
                 })
-                self.progressBar.setProgress(0, animated: false)
-                self.progressText.text = "Reinitializing."
-                
-            })
+            }
+        }
+        else{
+            numWarnings++
+            var status = StatusCenter.sharedInstance
+            status.displayImportantStatus("Warning: Memory limit reached, system may reboot soon.")
         }
         
         
@@ -192,16 +203,25 @@ class RootController: UIViewController, CamHomeControllerDelegate {
             }
         })
     }
-    func displayStatus(msg:String, labelSize size:CGSize){
-        println("Displaying status.")
+    func displayStatus(msg:String, labelSize size:CGSize, isImportant important:Bool){
+        println("Displaying \(msg)")
         dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            if !important{
+                self.statusView.backgroundColor = UIColor.whiteColor()
+                self.statusLabel.textColor = UIColor.blackColor()
+                self.axillaryLbl.textColor = UIColor.blackColor()
+            }
+            else{
+                self.statusView.backgroundColor = UIColor.redColor()
+                self.statusLabel.textColor = UIColor.whiteColor()
+                self.axillaryLbl.textColor = UIColor.whiteColor()
+            }
             if !self.aStatusIsActive{
                 self.statusView.frame = CGRectMake(5, 5, 3, 0)
                 self.aStatusIsActive = true
                 self.statusLabel.frame = CGRectMake(5, size.height / 2, size.width, size.height)
                 self.statusLabel.text = msg
                 self.statusLabel.alpha = 0
-                self.statusView.backgroundColor = UIColor.whiteColor()
                 UIView.animateWithDuration(0.3, delay: 0.4, options: UIViewAnimationOptions.CurveEaseOut, animations: { () -> Void in
                     self.statusView.frame = CGRectMake(5, 5, 3, size.height + 10)
                     }, completion: { (complete) -> Void in
@@ -226,7 +246,11 @@ class RootController: UIViewController, CamHomeControllerDelegate {
                                                                     //                                                                    self.statusLabel.transform = CGAffineTransformMakeTranslation(0, -offset)
                                                                     self.statusLabel.frame = CGRectMake(self.statusLabel.frame.origin.x, self.statusLabel.frame.origin.y - offset, self.statusLabel.frame.width, self.statusLabel.frame.height)
                                                                     }, completion: { (complete) -> Void in
-                                                                        let timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "canAcceptAnotherStatus", userInfo: nil, repeats: false)
+                                                                        var duration:Double = 1
+                                                                        if important{
+                                                                            duration = 4
+                                                                        }
+                                                                        let timer = NSTimer.scheduledTimerWithTimeInterval(duration, target: self, selector: "canAcceptAnotherStatus", userInfo: nil, repeats: false)
                                                                 })
                                                         })
                                                 })
@@ -258,7 +282,7 @@ class RootController: UIViewController, CamHomeControllerDelegate {
                 self.axillaryLbl.text = msg
                 var frame = self.axillaryLbl.frame
                 var offset = self.axillaryLbl.frame.origin.y - 5
-                println("Offset: \(-offset)")
+                //                println("Offset: \(-offset)")
                 UIView.animateWithDuration(0.3, delay: 0.2, options: .CurveEaseIn, animations: { () -> Void in
                     self.statusLabel.frame = CGRectMake(self.statusLabel.frame.origin.x, self.statusLabel.frame.origin.y - offset, self.statusLabel.frame.width, self.statusLabel.frame.height)
                     self.statusLabel.alpha = 0
@@ -270,11 +294,21 @@ class RootController: UIViewController, CamHomeControllerDelegate {
                         self.statusLabel.alpha = 1
                         self.axillaryLbl.alpha = 0
                         self.axillaryLbl.frame = frame
-                        let timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "canAcceptAnotherStatus", userInfo: nil, repeats: false)
+                        var duration:Double = 1
+                        if important{
+                            duration = 4
+                        }
+                        let timer = NSTimer.scheduledTimerWithTimeInterval(duration, target: self, selector: "canAcceptAnotherStatus", userInfo: nil, repeats: false)
                 })
             }
         })
         
+    }
+    
+    func displayImportantStatus(){
+        if self.statusView != nil{
+            dismissStatusView()
+        }
     }
     func canAcceptAnotherStatus(){
         self.delegate?.statusDismissed()

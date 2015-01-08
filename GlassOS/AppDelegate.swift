@@ -71,8 +71,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PromptBoxDelegate, RootCo
         var statusCenter = StatusCenter.sharedInstance
         statusCenter.aStatusHasBeenDismissed()
     }
-    func displayStatus(msg:String!, labelSize size:CGSize){
-        rootController?.displayStatus(msg, labelSize: size)
+    func displayStatus(msg:String!, labelSize size:CGSize, isImportant important:Bool){
+        rootController?.displayStatus(msg, labelSize: size, isImportant: important)
     }
     func dismissStatusWindow(){
         rootController?.dismissStatusView()
@@ -80,7 +80,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PromptBoxDelegate, RootCo
     func rebootOS(){
         camController = nil
         camController = CamHomeController()
-        rootController?.transitionToCamController(camController)
+        transitionToCam()
     }
     func applicationWillResignActive(application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

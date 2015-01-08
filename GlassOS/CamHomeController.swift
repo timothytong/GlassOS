@@ -31,6 +31,7 @@ class CamHomeController: UIViewController, CursorDelegate, TesseractDelegate{
     private var ocrResultWindow: UIView!
     private var mainMenu: Menu!
     private var mainMenuArray: Array<NSDictionary>!
+    
     var delegate: CamHomeControllerDelegate?
     let screenSize = Constants.screenSize()
     override func viewDidLoad() {
@@ -250,7 +251,6 @@ class CamHomeController: UIViewController, CursorDelegate, TesseractDelegate{
                 //                if device.exposureMode == .Custom{
                 //                    CamHomeController.setFlashMode(.Off, forDevice: device)
                 //                }
-                
                 // Capture image.
                 self.imageOutput!.captureStillImageAsynchronouslyFromConnection(self.imageOutput!.connectionWithMediaType(AVMediaTypeVideo), completionHandler: { (imageDataSampleBuffer, error) -> Void in
                     var status = StatusCenter.sharedInstance
@@ -277,7 +277,7 @@ class CamHomeController: UIViewController, CursorDelegate, TesseractDelegate{
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
                 autoreleasepool { () -> () in
                     // Tesseract OCR
-                    var tesseract = Tesseract(language: "chi_sim+chi_tra")
+                    var tesseract = Tesseract(language: "chi_sim")//+chi_tra+jpn
                     tesseract.delegate = self
                     var status = StatusCenter.sharedInstance
                     status.displayStatus("Analyzing.")
@@ -306,8 +306,7 @@ class CamHomeController: UIViewController, CursorDelegate, TesseractDelegate{
                                     println("RECOGNIZED: \(recText)")
                                     status.displayStatus("Translating.")
                                     var error = false
-                                    if recText == "" && recText == " "{
-                                        recText = "Error."
+                                    if recText == "" || recText == "\n" || recText == nil{
                                         error = true
                                     }
                                     if !error{
