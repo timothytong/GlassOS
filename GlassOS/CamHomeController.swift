@@ -253,10 +253,19 @@ class CamHomeController: UIViewController, CursorDelegate, TesseractDelegate{
                 
                 // Capture image.
                 self.imageOutput!.captureStillImageAsynchronouslyFromConnection(self.imageOutput!.connectionWithMediaType(AVMediaTypeVideo), completionHandler: { (imageDataSampleBuffer, error) -> Void in
+                    var status = StatusCenter.sharedInstance
                     if ((imageDataSampleBuffer) != nil){
+                        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                            status.displayStatus("Captured.")
+                        })
                         var imageData:NSData = AVCaptureStillImageOutput.jpegStillImageNSDataRepresentation(imageDataSampleBuffer)
                         var image = UIImage(data: imageData)
                         completion(image)
+                    }
+                    else{
+                        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                            status.displayStatus("Error capturing.")
+                        })
                     }
                 })
             }
@@ -271,7 +280,7 @@ class CamHomeController: UIViewController, CursorDelegate, TesseractDelegate{
                     var tesseract = Tesseract(language: "chi_sim+chi_tra")
                     tesseract.delegate = self
                     var status = StatusCenter.sharedInstance
-                    status.displayStatus("Analyzing Image.")
+                    status.displayStatus("Analyzing.")
                     self.cursor.endDragging()
                     var image:UIImage = capturedImg!
                     var gpuImg = GPUImagePicture(image: image)
@@ -295,70 +304,72 @@ class CamHomeController: UIViewController, CursorDelegate, TesseractDelegate{
                                     var recText = tesseract.recognizedText
                                     tesseract = nil
                                     println("RECOGNIZED: \(recText)")
-                                                        status.displayStatus("Recognized.")
-                                    var translator = FGTranslator(bingAzureClientId: "timothytong001", secret: "ykVQA7+f2GNEG6ihLEK+OwYrXmfo3fkIy+wq17aYwyE=")
-                                    translator!.translateText(recText, completion: { (err, translated, sourceLang) -> Void in
-                                        autoreleasepool({ () -> () in
-                                            println("Translation complete: \(recText) -> \(translated)")
-                                            translator = nil
-                                            var error = false
-                                            if recText == ""{
-                                                recText = "Error."
-                                                error = true
-                                            }
-                                            
-                                            dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                                                var recLabelText = recText as NSString
-                                                var recTextRectSize = recLabelText.boundingRectWithSize(CGSizeMake(self.view.frame.width - 10, 40), options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont(name: "HelveticaNeue-Thin", size: 24)!], context: nil).size
-                                                var transTextRectSize = translated.boundingRectWithSize(CGSizeMake(self.view.frame.width - 10, 40), options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont(name: "HelveticaNeue-Thin", size: 24)!], context: nil).size
-                                                var finalRectSize = (recTextRectSize.width >= transTextRectSize.width) ? recTextRectSize : transTextRectSize
-                                                if (self.ocrResultWindow != nil){
-                                                    println(" -- Removing existing OCR window from superview")
-                                                    self.ocrResultWindow.removeFromSuperview()
-                                                    self.ocrResultWindow = nil
-                                                }
-                                                self.ocrResultWindow = UIView(frame:CGRectMake(imageView.frame.origin.x, imageView.frame.origin.y, finalRectSize.width + 10, finalRectSize.height + 10))
-                                                self.ocrResultWindow.backgroundColor = UIColor.whiteColor()
-                                                self.ocrResultWindow.alpha = 0
-                                                self.ocrResultWindow.clipsToBounds = true
-                                                
-                                                // dynamic label size
-                                                // code to generate a bounding rect for text at various font sizes
-                                                var txtLabel = UILabel(frame: CGRectMake(5, 5, finalRectSize.width, finalRectSize.height))
-                                                txtLabel.text = recText
-                                                txtLabel.font = UIFont(name: "HelveticaNeue-Thin", size: 24)
-                                                txtLabel.textAlignment = .Center
-                                                self.ocrResultWindow.addSubview(txtLabel)
-                                                self.view.addSubview(self.ocrResultWindow)
-                                                if error{
-                                                    UIView.animateWithDuration(0.3, delay: 1, options: .CurveEaseInOut, animations: { () -> Void in
-                                                        self.ocrResultWindow.alpha = 0
-                                                        }, completion: { (complete) -> Void in
-                                                            let delegate = UIApplication.sharedApplication().delegate as AppDelegate
-                                                            delegate.disablePageAndDisplayNotice("Error", msg: "Translation failed")
-                                                    })
-                                                }
-                                                else{
-                                                    UIView.animateWithDuration(1, delay: 3.7, options: .CurveEaseInOut, animations: { () -> Void in
-                                                        self.ocrResultWindow.transform = CGAffineTransformMakeTranslation(self.screenSize.width - 5 - self.ocrResultWindow.frame.width - self.ocrResultWindow.frame.origin.x, 5 - self.ocrResultWindow.frame.origin.y)
-                                                        }, completion: { (complete) -> Void in
-                                                            var translationLbl = UILabel(frame: CGRectMake(5, finalRectSize.height + 5, finalRectSize.width, finalRectSize.height))
-                                                            translationLbl.text = translated
-                                                            translationLbl.textAlignment = .Center
-                                                            translationLbl.font = UIFont(name: "HelveticaNeue-Thin", size: 24)
-                                                            self.ocrResultWindow.addSubview(translationLbl)
-                                                            UIView.animateWithDuration(0.6, delay: 0, options: .CurveEaseInOut, animations: { () -> Void in
-                                                                self.ocrResultWindow.frame = CGRectMake(self.ocrResultWindow.frame.origin.x, self.ocrResultWindow.frame.origin.y, self.ocrResultWindow.frame.width, 2 * self.ocrResultWindow.frame.height - 10)
-                                                                }, completion: { (complete) -> Void in
-                                                                    
-                                                            })
-                                                    })
-                                                }
+                                    status.displayStatus("Translating.")
+                                    var error = false
+                                    if recText == "" && recText == " "{
+                                        recText = "Error."
+                                        error = true
+                                    }
+                                    if !error{
+                                        var translator = FGTranslator(bingAzureClientId: "timothytong001", secret: "ykVQA7+f2GNEG6ihLEK+OwYrXmfo3fkIy+wq17aYwyE=")
+                                        translator!.translateText(recText, completion: { (err, translated, sourceLang) -> Void in
+                                            autoreleasepool({ () -> () in
+                                                println("Translation complete: \(recText) -> \(translated)")
+                                                translator = nil
+                                                status.displayStatus("Done.")
+                                                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                                                    var recLabelText = recText as NSString
+                                                    var recTextRectSize = recLabelText.boundingRectWithSize(CGSizeMake(self.view.frame.width - 10, 40), options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont(name: "HelveticaNeue-Thin", size: 24)!], context: nil).size
+                                                    var transTextRectSize = translated.boundingRectWithSize(CGSizeMake(self.view.frame.width - 10, 40), options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont(name: "HelveticaNeue-Thin", size: 24)!], context: nil).size
+                                                    var finalRectSize = (recTextRectSize.width >= transTextRectSize.width) ? recTextRectSize : transTextRectSize
+                                                    if (self.ocrResultWindow != nil){
+                                                        println(" -- Removing existing OCR window from superview")
+                                                        self.ocrResultWindow.removeFromSuperview()
+                                                        self.ocrResultWindow = nil
+                                                    }
+                                                    self.ocrResultWindow = UIView(frame:CGRectMake(imageView.frame.origin.x, imageView.frame.origin.y, finalRectSize.width + 10, finalRectSize.height + 10))
+                                                    self.ocrResultWindow.backgroundColor = UIColor.whiteColor()
+                                                    self.ocrResultWindow.alpha = 0
+                                                    self.ocrResultWindow.clipsToBounds = true
+                                                    
+                                                    // dynamic label size
+                                                    // code to generate a bounding rect for text at various font sizes
+                                                    var txtLabel = UILabel(frame: CGRectMake(5, 5, finalRectSize.width, finalRectSize.height))
+                                                    txtLabel.text = recText
+                                                    txtLabel.font = UIFont(name: "HelveticaNeue-Thin", size: 24)
+                                                    txtLabel.textAlignment = .Center
+                                                    self.ocrResultWindow.addSubview(txtLabel)
+                                                    self.view.addSubview(self.ocrResultWindow)
+                                                    if error{
+                                                        UIView.animateWithDuration(0.3, delay: 1, options: .CurveEaseInOut, animations: { () -> Void in
+                                                            self.ocrResultWindow.alpha = 0
+                                                            }, completion: { (complete) -> Void in
+                                                                status.displayStatus("Error translating.")
+                                                        })
+                                                    }
+                                                    else{
+                                                        UIView.animateWithDuration(1, delay: 3.7, options: .CurveEaseInOut, animations: { () -> Void in
+                                                            self.ocrResultWindow.transform = CGAffineTransformMakeTranslation(self.screenSize.width - 5 - self.ocrResultWindow.frame.width - self.ocrResultWindow.frame.origin.x, 5 - self.ocrResultWindow.frame.origin.y)
+                                                            }, completion: { (complete) -> Void in
+                                                                var translationLbl = UILabel(frame: CGRectMake(5, finalRectSize.height + 5, finalRectSize.width, finalRectSize.height))
+                                                                translationLbl.text = translated
+                                                                translationLbl.textAlignment = .Center
+                                                                translationLbl.font = UIFont(name: "HelveticaNeue-Thin", size: 24)
+                                                                self.ocrResultWindow.addSubview(translationLbl)
+                                                                UIView.animateWithDuration(0.6, delay: 0, options: .CurveEaseInOut, animations: { () -> Void in
+                                                                    self.ocrResultWindow.frame = CGRectMake(self.ocrResultWindow.frame.origin.x, self.ocrResultWindow.frame.origin.y, self.ocrResultWindow.frame.width, 2 * self.ocrResultWindow.frame.height - 10)
+                                                                    }, completion: { (complete) -> Void in
+                                                                        
+                                                                })
+                                                        })
+                                                    }
+                                                })
                                             })
                                         })
-                                    })
+                                    }
                                 }else{
                                     println("Cannot recognize text.")
+                                    status.displayStatus("Cannot recognize.")
                                 }
                             })
                             UIView.animateWithDuration(0.25, delay: 1, options: .CurveEaseIn, animations: { () -> Void in

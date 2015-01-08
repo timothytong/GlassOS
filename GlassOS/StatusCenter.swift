@@ -53,6 +53,9 @@ class StatusCenter{
         }
         else{
             aStatusIsActive = false
+            let appDel = UIApplication.sharedApplication().delegate as AppDelegate
+            appDel.dismissStatusWindow()
+
         }
     }
     

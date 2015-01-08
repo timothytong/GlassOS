@@ -63,13 +63,21 @@ class RootController: UIViewController, CamHomeControllerDelegate {
         view.sendSubviewToBack(progressText)
         statusView = UIView(frame: CGRectMake(5, 5, 0, 0))
         statusView.clipsToBounds = true
+        
         statusLabel = UILabel()
         statusLabel.textAlignment = .Center
         statusLabel.font = UIFont(name: "HelveticaNeue-Thin", size: 25)
-        statusView.addSubview(statusLabel)
         statusLabel.numberOfLines = 0
         statusLabel.lineBreakMode = .ByWordWrapping
+        statusView.addSubview(statusLabel)
+        
+        
         axillaryLbl = UILabel()
+        axillaryLbl.textAlignment = .Center
+        axillaryLbl.font = UIFont(name: "HelveticaNeue-Thin", size: 25)
+        axillaryLbl.numberOfLines = 0
+        axillaryLbl.lineBreakMode = .ByWordWrapping
+        statusView.addSubview(axillaryLbl)
         view.addSubview(statusView)
     }
     override func didReceiveMemoryWarning() {
@@ -215,7 +223,8 @@ class RootController: UIViewController, CamHomeControllerDelegate {
                                                                 UIView.animateWithDuration(0.2, delay: 0, options: .CurveEaseIn, animations: { () -> Void in
                                                                     self.statusLabel.alpha = 1
                                                                     var offset = self.statusLabel.frame.origin.y - 5
-                                                                    self.statusLabel.transform = CGAffineTransformMakeTranslation(0, -offset)
+                                                                    //                                                                    self.statusLabel.transform = CGAffineTransformMakeTranslation(0, -offset)
+                                                                    self.statusLabel.frame = CGRectMake(self.statusLabel.frame.origin.x, self.statusLabel.frame.origin.y - offset, self.statusLabel.frame.width, self.statusLabel.frame.height)
                                                                     }, completion: { (complete) -> Void in
                                                                         let timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "canAcceptAnotherStatus", userInfo: nil, repeats: false)
                                                                 })
@@ -239,7 +248,6 @@ class RootController: UIViewController, CamHomeControllerDelegate {
                                 UIView.animateWithDuration(0.15, delay: 0, options: .CurveEaseInOut, animations: { () -> Void in
                                     self.statusView.frame = CGRectMake(self.statusView.frame.origin.x, self.statusView.frame.origin.y, newWidth, newHeight)
                                     }, completion: { (complete) -> Void in
-                                        let timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "canAcceptAnotherStatus", userInfo: nil, repeats: false)
                                 })
                                 
                             }
@@ -250,17 +258,19 @@ class RootController: UIViewController, CamHomeControllerDelegate {
                 self.axillaryLbl.text = msg
                 var frame = self.axillaryLbl.frame
                 var offset = self.axillaryLbl.frame.origin.y - 5
-                UIView.animateWithDuration(0.2, delay: 0.2, options: .CurveEaseIn, animations: { () -> Void in
-                    self.statusLabel.transform = CGAffineTransformMakeTranslation(0, -offset)
+                println("Offset: \(-offset)")
+                UIView.animateWithDuration(0.3, delay: 0.2, options: .CurveEaseIn, animations: { () -> Void in
+                    self.statusLabel.frame = CGRectMake(self.statusLabel.frame.origin.x, self.statusLabel.frame.origin.y - offset, self.statusLabel.frame.width, self.statusLabel.frame.height)
                     self.statusLabel.alpha = 0
-                    self.axillaryLbl.transform = CGAffineTransformMakeTranslation(0, -offset)
+                    self.axillaryLbl.frame = CGRectMake(self.axillaryLbl.frame.origin.x, self.axillaryLbl.frame.origin.y - offset, self.axillaryLbl.frame.width, self.axillaryLbl.frame.height)
                     self.axillaryLbl.alpha = 1
                     }, completion: { (complete) -> Void in
                         self.statusLabel.text = self.axillaryLbl.text
+                        self.statusLabel.frame = self.axillaryLbl.frame
                         self.statusLabel.alpha = 1
                         self.axillaryLbl.alpha = 0
-                        self.statusLabel.frame = self.axillaryLbl.frame
                         self.axillaryLbl.frame = frame
+                        let timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "canAcceptAnotherStatus", userInfo: nil, repeats: false)
                 })
             }
         })
@@ -268,7 +278,7 @@ class RootController: UIViewController, CamHomeControllerDelegate {
     }
     func canAcceptAnotherStatus(){
         self.delegate?.statusDismissed()
-
+        
     }
     func dismissStatusView(){
         dispatch_async(dispatch_get_main_queue(), { () -> Void in
@@ -280,7 +290,7 @@ class RootController: UIViewController, CamHomeControllerDelegate {
                     })
                     self.aStatusIsActive = false
             }
-
+            
         })
         
     }

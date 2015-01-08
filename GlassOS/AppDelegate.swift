@@ -74,6 +74,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PromptBoxDelegate, RootCo
     func displayStatus(msg:String!, labelSize size:CGSize){
         rootController?.displayStatus(msg, labelSize: size)
     }
+    func dismissStatusWindow(){
+        rootController?.dismissStatusView()
+    }
     func rebootOS(){
         camController = nil
         camController = CamHomeController()
