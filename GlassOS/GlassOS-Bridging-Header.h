@@ -11,3 +11,4 @@
 #import "AFHTTPSessionManager.h"
 #import "AFNetworkActivityIndicatorManager.h"
 #import "FGTranslator.h"
+//#import "G8RecognitionOperation.h"

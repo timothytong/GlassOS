@@ -27,24 +27,27 @@ class StatusCenter{
     }
     
     func displayStatus(msg: String){
-        if canShowNormalStatus{
-            if statusQueue == nil{
-                statusQueue = [Dictionary<String, Any>]()
+        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            if self.canShowNormalStatus{
+                if self.statusQueue == nil{
+                    self.statusQueue = [Dictionary<String, Any>]()
+                }
+                let appDel = UIApplication.sharedApplication().delegate as AppDelegate
+                var rectSize = msg.boundingRectWithSize(CGSizeMake(self.screenSize.width / 2, 0), options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont(name: "HelveticaNeue-Thin", size: 25)!], context: nil).size
+                if !self.aStatusIsActive{
+                    self.aStatusIsActive = true
+                    appDel.displayStatus(msg, labelSize: rectSize, isImportant: false)
+                }
+                else{
+                    var newDict = [String:Any]()
+                    newDict.updateValue(msg, forKey: "message")
+                    newDict.updateValue(rectSize, forKey: "size")
+                    self.statusQueue.append(newDict)
+                }
+                
             }
-            let appDel = UIApplication.sharedApplication().delegate as AppDelegate
-            var rectSize = msg.boundingRectWithSize(CGSizeMake(self.screenSize.width / 2, 0), options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont(name: "HelveticaNeue-Thin", size: 25)!], context: nil).size
-            if !aStatusIsActive{
-                aStatusIsActive = true
-                appDel.displayStatus(msg, labelSize: rectSize, isImportant: false)
-            }
-            else{
-                var newDict = [String:Any]()
-                newDict.updateValue(msg, forKey: "message")
-                newDict.updateValue(rectSize, forKey: "size")
-                statusQueue.append(newDict)
-            }
-            
-        }
+        })
+        
     }
     
     func aStatusHasBeenDismissed(){

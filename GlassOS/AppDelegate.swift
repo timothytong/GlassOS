@@ -51,7 +51,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PromptBoxDelegate, RootCo
         case "selrect":
             if button == "Yes"{
                 self.rootController!.dismissCurrentPromptWindow()
-                self.camController!.captureSelectionArea()
+                self.camController!.captureSelectionAreaAndTranslate()
             }
         default:
             break;
@@ -72,7 +72,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PromptBoxDelegate, RootCo
         statusCenter.aStatusHasBeenDismissed()
     }
     func displayStatus(msg:String!, labelSize size:CGSize, isImportant important:Bool){
-        rootController?.displayStatus(msg, labelSize: size, isImportant: important)
+        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            self.rootController!.displayStatus(msg, labelSize: size, isImportant: important)
+        })
+        
     }
     func dismissStatusWindow(){
         rootController?.dismissStatusView()
