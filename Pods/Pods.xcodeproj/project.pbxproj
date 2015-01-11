@@ -87,7 +87,6 @@
 		316ADA72E28A279380271FF6 /* makerow.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D47DB24089E51F8D5EB2EF3 /* makerow.h */; };
 		322F0B42BED12C3B275CF6B9 /* points.h in Headers */ = {isa = PBXBuildFile; fileRef = 720703A349764CFD7832EB2C /* points.h */; };
 		330205CEA76D403F4E4A4216 /* chop.h in Headers */ = {isa = PBXBuildFile; fileRef = 7B2A1CEF7FD35775D478E45B /* chop.h */; };
-		3366DC2B1A622BDC00E9CA16 /* G8RecognitionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 3366DC2A1A622BDC00E9CA16 /* G8RecognitionOperation.m */; };
 		3388234B66EAF785F9C56499 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 561DD54AB119D5E707C929DB /* CoreGraphics.framework */; };
 		339241D94469CB86FEF6F33C /* Tesseract.h in Headers */ = {isa = PBXBuildFile; fileRef = 2901EA9F788397C569658D37 /* Tesseract.h */; };
 		3545840E37BDF9EA844BB55A /* tlog.h in Headers */ = {isa = PBXBuildFile; fileRef = 3E020E1B03F188D24A6507A1 /* tlog.h */; };
@@ -507,8 +506,6 @@
 		301D2824BE29C602306F837A /* object_cache.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = object_cache.h; path = TesseractOCR/include/tesseract/object_cache.h; sourceTree = "<group>"; };
 		32A00B693A207A2113F001BA /* tabfind.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = tabfind.h; path = TesseractOCR/include/tesseract/tabfind.h; sourceTree = "<group>"; };
 		334C32F77FBD435C6A87346C /* equationdetectbase.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = equationdetectbase.h; path = TesseractOCR/include/tesseract/equationdetectbase.h; sourceTree = "<group>"; };
-		3366DC291A622BDC00E9CA16 /* G8RecognitionOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = G8RecognitionOperation.h; sourceTree = "<group>"; };
-		3366DC2A1A622BDC00E9CA16 /* G8RecognitionOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = G8RecognitionOperation.m; sourceTree = "<group>"; };
 		339639E74F12847543E3D295 /* lang_mod_edge.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = lang_mod_edge.h; path = TesseractOCR/include/tesseract/lang_mod_edge.h; sourceTree = "<group>"; };
 		352396CFA7B51FB92F9C0655 /* linlsq.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = linlsq.h; path = TesseractOCR/include/tesseract/linlsq.h; sourceTree = "<group>"; };
 		3583163DF7C94041A9E09C29 /* unicodes.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = unicodes.h; path = TesseractOCR/include/tesseract/unicodes.h; sourceTree = "<group>"; };
@@ -905,8 +902,6 @@
 		1219612025E799C042D1BA37 /* TesseractOCRiOS */ = {
 			isa = PBXGroup;
 			children = (
-				3366DC291A622BDC00E9CA16 /* G8RecognitionOperation.h */,
-				3366DC2A1A622BDC00E9CA16 /* G8RecognitionOperation.m */,
 				2901EA9F788397C569658D37 /* Tesseract.h */,
 				4248C40C1B028A1CA4A232B2 /* TesseractOCR.h */,
 				6D3588B9FCB3CE054A1A1C26 /* UIImage+Filters.h */,
@@ -1951,7 +1946,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3366DC2B1A622BDC00E9CA16 /* G8RecognitionOperation.m in Sources */,
 				F7FF9C8B85299EB62D5B7331 /* Pods-dummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
