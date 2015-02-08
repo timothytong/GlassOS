@@ -44,10 +44,8 @@ class StatusCenter{
                     newDict.updateValue(rectSize, forKey: "size")
                     self.statusQueue.append(newDict)
                 }
-                
             }
         })
-        
     }
     
     func aStatusHasBeenDismissed(){

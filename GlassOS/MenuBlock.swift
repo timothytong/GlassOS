@@ -62,26 +62,37 @@ class MenuBlock: UIView {
     }
     func highlight(){
         if !isHilighted{
-            UIView.animateWithDuration(0.25, delay: 0, options: UIViewAnimationOptions.CurveEaseIn, animations: { () -> Void in
-                self.sel_imgView.alpha = 1
-                }, completion: { (complete) -> Void in
-                    self.isHilighted = true
-                    self.delegate?.animationCompl()
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                UIView.animateWithDuration(0.25, delay: 0, options: UIViewAnimationOptions.CurveEaseIn, animations: { () -> Void in
+                    self.sel_imgView.alpha = 1
+                    }, completion: { (complete) -> Void in
+                        self.isHilighted = true
+                        self.delegate?.animationCompl()
+                        self.labelBG.layer.backgroundColor = UIColor(white: 0, alpha: 0.3).CGColor
+                })
+                UIView.transitionWithView(self.label, duration: 0.25, options: UIViewAnimationOptions.TransitionCrossDissolve, animations: { () -> Void in
                     self.label.textColor = UIColor.whiteColor()
-                    self.labelBG.backgroundColor = UIColor.blackColor()
+                    }, completion: { (complete) -> Void in
+                })
             })
         }
     }
     func unhighlight(){
         if (isHilighted == true){
-            UIView.animateWithDuration(0.25, delay: 0, options: UIViewAnimationOptions.CurveEaseIn, animations: { () -> Void in
-                self.sel_imgView.alpha = 0
-                }, completion: { (complete) -> Void in
-                    self.isHilighted = false
-                    self.delegate?.animationCompl()
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                UIView.animateWithDuration(0.25, delay: 0, options: UIViewAnimationOptions.CurveEaseIn, animations: { () -> Void in
+                    self.sel_imgView.alpha = 0
+                    }, completion: { (complete) -> Void in
+                        self.isHilighted = false
+                        self.delegate?.animationCompl()
+                        self.labelBG.layer.backgroundColor = UIColor(white: 1, alpha: 0.3).CGColor
+                })
+                UIView.transitionWithView(self.label, duration: 0.25, options: UIViewAnimationOptions.TransitionCrossDissolve, animations: { () -> Void in
                     self.label.textColor = UIColor.blackColor()
-                    self.labelBG.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.3)
+                    }, completion: { (complete) -> Void in
+                })
             })
+
         }
     }
     func enable(){

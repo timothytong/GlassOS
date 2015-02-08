@@ -16,6 +16,7 @@
 		334FA47A1A3B567F0065A87D /* RootController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 334FA4771A3B567F0065A87D /* RootController.swift */; };
 		334FA47B1A3B567F0065A87D /* CamHomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 334FA4781A3B567F0065A87D /* CamHomeController.swift */; };
 		334FA47C1A3B567F0065A87D /* MainController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 334FA4791A3B567F0065A87D /* MainController.swift */; };
+		33580FE61A86D9A600F68AE5 /* OCRManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33580FE51A86D9A600F68AE5 /* OCRManager.swift */; };
 		3366DC261A62272700E9CA16 /* GPUImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3366DC251A62271D00E9CA16 /* GPUImage.framework */; };
 		3366DC281A62273500E9CA16 /* GPUImage.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3366DC251A62271D00E9CA16 /* GPUImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		338EB0991A45261E008CF15C /* TranslationBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 338EB0981A45261E008CF15C /* TranslationBox.swift */; };
@@ -89,6 +90,7 @@
 		334FA4771A3B567F0065A87D /* RootController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootController.swift; sourceTree = "<group>"; };
 		334FA4781A3B567F0065A87D /* CamHomeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CamHomeController.swift; sourceTree = "<group>"; };
 		334FA4791A3B567F0065A87D /* MainController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainController.swift; sourceTree = "<group>"; };
+		33580FE51A86D9A600F68AE5 /* OCRManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OCRManager.swift; sourceTree = "<group>"; };
 		335901091E294B5DB7A79A3E /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		3366DC1C1A62271C00E9CA16 /* GPUImage.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GPUImage.xcodeproj; path = GlassOS/GPUImage/GPUImage.xcodeproj; sourceTree = "<group>"; };
 		338EB0981A45261E008CF15C /* TranslationBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TranslationBox.swift; sourceTree = "<group>"; };
@@ -160,6 +162,7 @@
 		334FA4541A3B56480065A87D /* GlassOS */ = {
 			isa = PBXGroup;
 			children = (
+				33580FE11A86D98100F68AE5 /* Utilities */,
 				33D4B3AD1A5DED7E0097A638 /* Controllers */,
 				334FA4571A3B56480065A87D /* AppDelegate.swift */,
 				33C0D5561A5B6B4500AB4D5E /* Constants.swift */,
@@ -199,6 +202,14 @@
 				334FA46C1A3B56480065A87D /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		33580FE11A86D98100F68AE5 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				33580FE51A86D9A600F68AE5 /* OCRManager.swift */,
+			);
+			name = Utilities;
 			sourceTree = "<group>";
 		};
 		3366DC1D1A62271C00E9CA16 /* Products */ = {
@@ -440,6 +451,7 @@
 				334FA47B1A3B567F0065A87D /* CamHomeController.swift in Sources */,
 				338EB0991A45261E008CF15C /* TranslationBox.swift in Sources */,
 				33AE1C111A49CDA300C1A723 /* Cursor.swift in Sources */,
+				33580FE61A86D9A600F68AE5 /* OCRManager.swift in Sources */,
 				33D65C1B1A5CCBC800149D79 /* StatusCenter.swift in Sources */,
 				33FCAEF91A3B5B9A007FBFF2 /* NotificationBox.swift in Sources */,
 				334FA4581A3B56480065A87D /* AppDelegate.swift in Sources */,
