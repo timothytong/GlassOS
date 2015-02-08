@@ -310,7 +310,6 @@ class CamHomeController: UIViewController, CursorDelegate, OCRManagerDelegate{
                         var cropRect = CGRectMake(self.selRect.frame.origin.x/self.screenSize.width, self.selRect.frame.origin.y/self.screenSize.height, self.selRect.frame.width/self.screenSize.width, self.selRect.frame.height/self.screenSize.height)
                         var cropFilter = GPUImageCropFilter(cropRegion: cropRect)
                         var croppedImg = cropFilter.imageByFilteringImage(image)
-                        
                         if let imageView = self.ocrImgView{}
                         else{
                             self.ocrImgView = UIImageView(frame: self.selRect.frame)
