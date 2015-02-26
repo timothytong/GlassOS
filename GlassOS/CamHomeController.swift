@@ -20,6 +20,16 @@ enum CamHomeFunctionMode{
     case CameraMode
 }
 
+enum GestureDirectionX{
+    case Left
+    case Right
+}
+
+enum GestureDirectionY{
+    case Up
+    case Down
+}
+
 class CamHomeController: UIViewController, CursorDelegate, OCRManagerDelegate{
     // Cursor & selection box
     var cursor: Cursor!
@@ -27,6 +37,8 @@ class CamHomeController: UIViewController, CursorDelegate, OCRManagerDelegate{
     var canTapSelRect = false
     var selRect: UIView!
     var startingPoint = CGPointMake(0, 0)
+    var mostRecentDirectionX: GestureDirectionX?
+    var mostRecentDirectionY: GestureDirectionY?
     
     // Auxiliary
     var activeUIElements = Dictionary<String, UIView>()
@@ -45,13 +57,14 @@ class CamHomeController: UIViewController, CursorDelegate, OCRManagerDelegate{
     captureDevice:AVCaptureDevice?,
     zoomOffsetX: CGFloat = 0,
     zoomOffsetY: CGFloat = 0,
-    zoomScale = 1
+    zoomScale: CGFloat = 1.0
     
     // OCR
-    var ocrLanguage = "chi_sim"
-    var ocrManager: OCRManager?
-    var ocrImgView: UIImageView?
-    var ocrResultWindow: UIView!
+    var ocrLanguage = "chi_sim",
+    ocrManager: OCRManager?,
+    ocrImgView: UIImageView?,
+    ocrResultWindow: UIView!,
+    ocrResultRectSize: CGSize!
     
     var delegate: CamHomeControllerDelegate?
     let screenSize = Constants.screenSize()
@@ -65,18 +78,18 @@ class CamHomeController: UIViewController, CursorDelegate, OCRManagerDelegate{
         dispatch_async(sessionQueue, { () -> Void in
             // Main Menu
             // Can add youtube, music, safari etc...
-            var helpImg = UIImage(named: "help.png")
-            var sel_helpImg = UIImage(named: "help_sel.png")
-            var helpDict = NSDictionary(objects: NSArray(objects: helpImg!, sel_helpImg!, "Dictionary"), forKeys: ["norm_img","sel_img","caption"])
-            var emailImg = UIImage(named: "email.png")
-            var sel_emailImg = UIImage(named: "email_sel.png")
-            var emailDict = NSDictionary(objects: NSArray(objects: emailImg!, sel_emailImg!, "Email"), forKeys: ["norm_img","sel_img","caption"])
-            var camImg = UIImage(named: "cam.png")
-            var sel_camImg = UIImage(named: "cam_sel.png")
-            var camDict = NSDictionary(objects: NSArray(objects: camImg!, sel_camImg!, "Camera"), forKeys: ["norm_img","sel_img","caption"])
-            var settings = UIImage(named: "settings.png")
-            var sel_settingsImg = UIImage(named: "settings_sel.png")
-            var settingsDict = NSDictionary(objects: NSArray(objects: settings!, sel_settingsImg!, "Settings"), forKeys: ["norm_img","sel_img","caption"])
+            let helpImg = UIImage(named: "help.png")
+            let sel_helpImg = UIImage(named: "help_sel.png")
+            let helpDict = NSDictionary(objects: NSArray(objects: helpImg!, sel_helpImg!, "Dictionary"), forKeys: ["norm_img","sel_img","caption"])
+            let emailImg = UIImage(named: "email.png")
+            let sel_emailImg = UIImage(named: "email_sel.png")
+            let emailDict = NSDictionary(objects: NSArray(objects: emailImg!, sel_emailImg!, "Email"), forKeys: ["norm_img","sel_img","caption"])
+            let camImg = UIImage(named: "cam.png")
+            let sel_camImg = UIImage(named: "cam_sel.png")
+            let camDict = NSDictionary(objects: NSArray(objects: camImg!, sel_camImg!, "Camera"), forKeys: ["norm_img","sel_img","caption"])
+            let settings = UIImage(named: "settings.png")
+            let sel_settingsImg = UIImage(named: "settings_sel.png")
+            let settingsDict = NSDictionary(objects: NSArray(objects: settings!, sel_settingsImg!, "Settings"), forKeys: ["norm_img","sel_img","caption"])
             self.mainMenuArray = [helpDict, emailDict, camDict, settingsDict]
             
             // Dialog box
@@ -140,6 +153,8 @@ class CamHomeController: UIViewController, CursorDelegate, OCRManagerDelegate{
         //        dispatch_async(dispatch_get_main_queue(), { () -> Void in
         //            self.view.bringSubviewToFront(sender.view!)
         var translationPoint = sender.translationInView(self.view)
+        self.mostRecentDirectionX = (translationPoint.x >= 0) ? .Right : .Left
+        self.mostRecentDirectionY = (translationPoint.y >= 0) ? .Up : .Down
         if sender.state == .Began{
             self.startingPoint = self.cursor.frame.origin
             self.cursor.startDragging(self.startingPoint)
@@ -261,11 +276,13 @@ class CamHomeController: UIViewController, CursorDelegate, OCRManagerDelegate{
             self.captureSession.startRunning()
             self.delegate?.CameraSessionDidBegin()
             self.switchToMode(CamHomeFunctionMode.DictionaryMode)
-            //        NSThread.sleepForTimeInterval(2)
+            /*
+            NSThread.sleepForTimeInterval(2)
             
-            //            dispatch_async(dispatch_get_main_queue(), { () -> Void in
-            //                self.zoomInAtPoint(CGPointMake(0.7, 0.25), andScale: 1.3)
-            //          })
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                self.zoomInAtPoint(CGPointMake(0.7, 0.25), andScale: 1.3)
+            })
+*/
         })
         
     }
@@ -297,6 +314,9 @@ class CamHomeController: UIViewController, CursorDelegate, OCRManagerDelegate{
     
     func captureSelectionAreaAndTranslate(){
         capture { (capturedImg) -> Void in
+            if self.ocrResultWindow.isDescendantOfView(self.view){
+                self.ocrResultWindow.removeFromSuperview()
+            }
             println("==== Preparing to recognize.")
             dispatch_async(self.sessionQueue, { () -> Void in
                 autoreleasepool { () -> () in
@@ -307,16 +327,18 @@ class CamHomeController: UIViewController, CursorDelegate, OCRManagerDelegate{
                         self.cursor.endDragging()
                         var image:UIImage = capturedImg!
                         var gpuImg = GPUImagePicture(image: image)
-                        var cropRect = CGRectMake(self.selRect.frame.origin.x/self.screenSize.width, self.selRect.frame.origin.y/self.screenSize.height, self.selRect.frame.width/self.screenSize.width, self.selRect.frame.height/self.screenSize.height)
+                        let cropRectX = (self.mostRecentDirectionX == .Right) ? (self.cursor.frame.origin.x - self.selRect.frame.width) : self.cursor.frame.origin.x
+                        let cropRectY = (self.mostRecentDirectionY == .Down) ? (self.cursor.frame.origin.y - self.selRect.frame.height) : self.cursor.frame.origin.y
+                        var cropRect = CGRectMake(cropRectX / self.screenSize.width, cropRectY / self.screenSize.height, self.selRect.frame.width/self.screenSize.width, self.selRect.frame.height/self.screenSize.height);
+                        //                        var cropRect = CGRectMake((self.selRect.frame.origin.x + self.zoomOffsetX)/(self.screenSize.width * CGFloat(self.zoomScale)), (self.selRect.frame.origin.y + self.zoomOffsetY)/(self.screenSize.height * CGFloat(self.zoomScale)), self.selRect.frame.width/(self.screenSize.width * CGFloat(self.zoomScale)), self.selRect.frame.height/(self.screenSize.height * CGFloat(self.zoomScale)))
+//                        var cropRect = CGRectMake((self.cursor.frame.origin.x + self.zoomOffsetX * (self.zoomScale - 1.0))/(self.screenSize.width * self.zoomScale), (self.cursor.frame.origin.y + self.zoomOffsetY * (self.zoomScale - 1.0))/(self.screenSize.height * self.zoomScale), self.selRect.frame.width/(self.screenSize.width * CGFloat(self.zoomScale)), self.selRect.frame.height/(self.screenSize.height * CGFloat(self.zoomScale)))
                         var cropFilter = GPUImageCropFilter(cropRegion: cropRect)
-                        var croppedImg = cropFilter.imageByFilteringImage(image)
-                        if let imageView = self.ocrImgView{}
-                        else{
-                            self.ocrImgView = UIImageView(frame: self.selRect.frame)
-                            self.ocrImgView!.image = croppedImg
-                            self.ocrImgView!.alpha = 0
-                            self.view.addSubview(self.ocrImgView!)
-                        }
+                        var croppedImg:UIImage! = cropFilter.imageByFilteringImage(image)
+                        self.ocrImgView = UIImageView(frame: self.selRect.frame)
+                        self.ocrImgView!.image = croppedImg
+                        self.ocrImgView!.alpha = 0
+                        self.view.addSubview(self.ocrImgView!)
+                        
                         UIView.animateWithDuration(0.25, delay: 0, options: .CurveEaseIn, animations: { () -> Void in
                             self.ocrImgView!.alpha = 0.9
                             }, completion: { (complete) -> Void in
@@ -327,7 +349,7 @@ class CamHomeController: UIViewController, CursorDelegate, OCRManagerDelegate{
                                 }
                                 else{
                                     println("OCRManager DNE!!!")
-                                    status.displayStatus("Error.")
+                                    status.displayStatus("Error, try again.")
                                 }
                                 dispatch_async(dispatch_get_main_queue(), { () -> Void in
                                     UIView.animateWithDuration(0.25, delay: 1, options: .CurveEaseIn, animations: { () -> Void in
@@ -354,16 +376,13 @@ class CamHomeController: UIViewController, CursorDelegate, OCRManagerDelegate{
                                     })
                                 })
                         })
-                        
                     })
-                    
                 }
             })
         }
     }
     
     //    class func setFlashMode(flashMode: AVCaptureFlashMode, forDevice device:AVCaptureDevice){
-    //
     //    }
     
     // Uses the origin of the cursor to determine where to focus to. ** Might not need this since we have autofocus.
@@ -397,7 +416,6 @@ class CamHomeController: UIViewController, CursorDelegate, OCRManagerDelegate{
                 println("\(error)")
             }
         }
-        
     }
     
     // MARK: Functionality tests
@@ -425,6 +443,13 @@ class CamHomeController: UIViewController, CursorDelegate, OCRManagerDelegate{
     func zoomInAtPoint(point:CGPoint!, andScale scale:CGFloat){
         if let pLayer = self.previewLayer{
             pLayer.anchorPoint = point
+            /*
+            UIView.transitionWithView(self.previewLayer, duration: 2.0, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
+            
+            }, completion: { (complete) -> Void in
+            
+            })
+            */
             UIView.animateWithDuration(1, animations: { () -> Void in
                 pLayer.transform = CATransform3DMakeScale(scale, scale, 0)
                 }, completion: { (complete) -> Void in
@@ -432,7 +457,9 @@ class CamHomeController: UIViewController, CursorDelegate, OCRManagerDelegate{
                     pLayer.frame.origin.y = (pLayer.frame.origin.y > 0) ? 0 : ((pLayer.frame.origin.y + pLayer.frame.width < self.view.bounds.height) ? self.view.bounds.height - pLayer.frame.height : pLayer.frame.origin.y)
                     self.zoomOffsetX = -pLayer.frame.origin.x
                     self.zoomOffsetY = -pLayer.frame.origin.y
-                    println("after: \(pLayer.frame.origin.x), \(pLayer.frame.origin.y), \(pLayer.frame.width), \(pLayer.frame.height)")
+                    //                    println("after: \(pLayer.frame.origin.x), \(pLayer.frame.origin.y), \(pLayer.frame.width), \(pLayer.frame.height)")
+                    println("OFFSETS: X -- \(self.zoomOffsetX), Y -- \(self.zoomOffsetY)")
+                    self.zoomScale = scale;
             })
         }
     }
@@ -452,7 +479,10 @@ class CamHomeController: UIViewController, CursorDelegate, OCRManagerDelegate{
             break
         }
     }
-    //pragma MARK: OCRManager
+    //pragma MARK: OCR
+    func displayOCRResultWithRect(){
+        
+    }
     func recognitionComplete(recognizedText: String?) {
         var status = StatusCenter.sharedInstance
         if let text = recognizedText{
@@ -470,11 +500,6 @@ class CamHomeController: UIViewController, CursorDelegate, OCRManagerDelegate{
                             var recTextRectSize = recLabelText.boundingRectWithSize(CGSizeMake(self.view.frame.width - 10, 40), options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont(name: "HelveticaNeue-Thin", size: 24)!], context: nil).size
                             var transTextRectSize = translated.boundingRectWithSize(CGSizeMake(self.view.frame.width - 10, 40), options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont(name: "HelveticaNeue-Thin", size: 24)!], context: nil).size
                             var finalRectSize = (recTextRectSize.width >= transTextRectSize.width) ? recTextRectSize : transTextRectSize
-                            if (self.ocrResultWindow != nil){
-                                println(" -- Removing existing OCR window from superview")
-                                self.ocrResultWindow.removeFromSuperview()
-                                self.ocrResultWindow = nil
-                            }
                             if let ocrImgView = self.ocrImgView{
                                 self.ocrResultWindow = UIView(frame:CGRectMake(ocrImgView.frame.origin.x, ocrImgView.frame.origin.y, finalRectSize.width + 10, finalRectSize.height + 10))
                                 self.ocrResultWindow.backgroundColor = UIColor.whiteColor()
@@ -522,6 +547,15 @@ class CamHomeController: UIViewController, CursorDelegate, OCRManagerDelegate{
                 }, completion: { (complete) -> Void in
                     status.displayStatus("Error recognizing.")
             })
+        }
+    }
+    func timeoutAndAbortOCR(abort:Bool){
+        var status = StatusCenter.sharedInstance
+        if !abort{
+            status.displayStatus("Hang on...")
+        }
+        else{
+            status.displayStatus("Unable to recognize.")
         }
     }
 }

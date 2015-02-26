@@ -49,34 +49,37 @@ class StatusCenter{
     }
     
     func aStatusHasBeenDismissed(){
-        aStatusIsActive = false
-        let appDel = UIApplication.sharedApplication().delegate as AppDelegate
-        if !canShowNormalStatus{
-            if imStatusQueue.isEmpty{
-                println("imStatus queue is empty.")
-                canShowNormalStatus = true
-                appDel.dismissStatusWindow()
+        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            self.aStatusIsActive = false
+            let appDel = UIApplication.sharedApplication().delegate as AppDelegate
+            if !self.canShowNormalStatus{
+                if self.imStatusQueue.isEmpty{
+                    println("imStatus queue is empty.")
+                    self.canShowNormalStatus = true
+                    appDel.dismissStatusWindow()
+                }
+                else{
+                    let dict = self.imStatusQueue.removeAtIndex(0) as Dictionary
+                    var message = dict["message"] as String
+                    var size = dict["size"] as CGSize
+                    println("imStatus queue is not empty, message is \(message)")
+                    appDel.displayStatus(message, labelSize: size, isImportant: true)
+                }
             }
             else{
-                let dict = imStatusQueue.removeAtIndex(0) as Dictionary
-                var message = dict["message"] as String
-                var size = dict["size"] as CGSize
-                println("imStatus queue is not empty, message is \(message)")
-                appDel.displayStatus(message, labelSize: size, isImportant: true)
+                if !self.statusQueue.isEmpty{
+                    let dict = self.statusQueue.removeAtIndex(0) as Dictionary
+                    var message = dict["message"] as String
+                    var size = dict["size"] as CGSize
+                    appDel.displayStatus(message, labelSize: size, isImportant: false)
+                }
+                else{
+                    self.aStatusIsActive = false
+                    appDel.dismissStatusWindow()
+                }
             }
-        }
-        else{
-            if !statusQueue.isEmpty{
-                let dict = statusQueue.removeAtIndex(0) as Dictionary
-                var message = dict["message"] as String
-                var size = dict["size"] as CGSize
-                appDel.displayStatus(message, labelSize: size, isImportant: false)
-            }
-            else{
-                aStatusIsActive = false
-                appDel.dismissStatusWindow()
-            }
-        }
+        })
+        
     }
     
     func delay(delay:Double, closure:()->()) {
@@ -89,18 +92,21 @@ class StatusCenter{
     }
     
     func displayImportantStatus(msg: String){
-        clearQueue()
-        if imStatusQueue == nil{
-            imStatusQueue = [Dictionary<String, Any>]()
-        }
-        canShowNormalStatus = false
-        var rectSize = msg.boundingRectWithSize(CGSizeMake(self.screenSize.width - 10, 0), options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont(name: "HelveticaNeue-Thin", size: 25)!], context: nil).size
-        let appDel = UIApplication.sharedApplication().delegate as AppDelegate
-        appDel.dismissStatusWindow()
-        
-        delay(3, closure: { () -> () in
-            appDel.displayStatus(msg, labelSize: rectSize, isImportant: true)
+        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            self.clearQueue()
+            if self.imStatusQueue == nil{
+                self.imStatusQueue = [Dictionary<String, Any>]()
+            }
+            self.canShowNormalStatus = false
+            var rectSize = msg.boundingRectWithSize(CGSizeMake(self.screenSize.width - 10, 0), options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont(name: "HelveticaNeue-Thin", size: 25)!], context: nil).size
+            let appDel = UIApplication.sharedApplication().delegate as AppDelegate
+            appDel.dismissStatusWindow()
+            
+            self.delay(3, closure: { () -> () in
+                appDel.displayStatus(msg, labelSize: rectSize, isImportant: true)
+            })
         })
+        
     }
     
     func clearQueue(){
